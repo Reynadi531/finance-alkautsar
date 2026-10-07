@@ -1,0 +1,3 @@
+{
+  "extends": "@keuangan-alkautsar/config/tsconfig.base.json"
+}
