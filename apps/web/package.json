@@ -8,6 +8,7 @@
     "dev": "vite dev",
     "check-types": "vite build && tsc --noEmit",
     "env:generate": "varlock codegen",
+    "db:seed": "varlock run -- bun scripts/seed.ts",
     "auth:generate": "varlock run -- bun x auth@latest generate --config src/services.ts --output ../../packages/db/src/schema/auth.ts --yes"
   },
   "dependencies": {
@@ -21,6 +22,7 @@
     "@tanstack/react-start": "^1.168.49",
     "@varlock/vite-integration": "1.5.1",
     "better-auth": "catalog:",
+    "drizzle-orm": "catalog:",
     "lucide-react": "catalog:",
     "next-themes": "catalog:",
     "nitro": "3.0.260903-beta",

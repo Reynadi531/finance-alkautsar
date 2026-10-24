@@ -1,14 +1,6 @@
 import { Toaster } from "@keuangan-alkautsar/ui/components/sonner";
-import {
-  HeadContent,
-  Outlet,
-  Scripts,
-  createRootRouteWithContext,
-  useRouterState,
-} from "@tanstack/react-router";
+import { HeadContent, Outlet, Scripts, createRootRouteWithContext } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
-
-import Header from "../components/header";
 
 import appCss from "../index.css?url";
 
@@ -25,7 +17,7 @@ export const Route = createRootRouteWithContext<RouterAppContext>()({
         content: "width=device-width, initial-scale=1",
       },
       {
-        title: "My App",
+        title: "ruangmasjid",
       },
     ],
     links: [
@@ -40,7 +32,7 @@ export const Route = createRootRouteWithContext<RouterAppContext>()({
       },
       {
         rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Inter:wght@400..700&family=Manrope:wght@600..800&display=swap",
+        href: "https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400..700&family=Inter:wght@400..700&family=Manrope:wght@600..800&display=swap",
       },
       {
         rel: "stylesheet",
@@ -53,22 +45,13 @@ export const Route = createRootRouteWithContext<RouterAppContext>()({
 });
 
 function RootDocument() {
-  const isLoginPage = useRouterState({ select: (state) => state.location.pathname === "/login" });
-
   return (
-    <html lang="en" className="dark">
+    <html lang="id">
       <head>
         <HeadContent />
       </head>
       <body>
-        {isLoginPage ? (
-          <Outlet />
-        ) : (
-          <div className="grid h-svh grid-rows-[auto_1fr]">
-            <Header />
-            <Outlet />
-          </div>
-        )}
+        <Outlet />
         <Toaster richColors />
         <TanStackRouterDevtools position="bottom-left" />
         <Scripts />

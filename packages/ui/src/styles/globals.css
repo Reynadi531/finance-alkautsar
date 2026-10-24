@@ -78,6 +78,7 @@
 @theme inline {
   --font-sans: "Inter Variable", "Inter", sans-serif;
   --font-display: "Manrope", "Inter", sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, monospace;
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -116,6 +117,35 @@
   --radius-2xl: calc(var(--radius) + 8px);
   --radius-3xl: calc(var(--radius) + 12px);
   --radius-4xl: calc(var(--radius) + 16px);
+}
+
+/* ruangmasjid app palette (Pencil design S01). Income green, expense red, balance blue. */
+@theme {
+  --color-brand: #003c91;
+  --color-brand-raised: #174f9b;
+  --color-brand-tint: #c9ddf3;
+  --color-brand-foreground: #dce8f7;
+  --color-brand-muted: #c7d8ee;
+  --color-brand-label: #afc5e5;
+  --color-canvas: #f5f7f6;
+  --color-ink: #17241d;
+  --color-ink-strong: #36453d;
+  --color-ink-body: #435149;
+  --color-ink-muted: #69766f;
+  --color-ink-subtle: #758078;
+  --color-ink-label: #77837c;
+  --color-line: #e6ebe8;
+  --color-field: #c9d7cf;
+  --color-income: #16704f;
+  --color-expense: #b44d48;
+  --color-balance: #325e9b;
+  --color-count: #42534a;
+  --color-action: #f5f8f6;
+  --color-action-hover: #e9f1ec;
+  --color-action-foreground: #245941;
+  --color-link: #26714f;
+  --color-chart-income: #1f8a5b;
+  --color-chart-expense: #ec9184;
 }
 
 @layer base {
