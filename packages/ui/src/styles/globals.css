@@ -146,6 +146,13 @@
   --color-link: #26714f;
   --color-chart-income: #1f8a5b;
   --color-chart-expense: #ec9184;
+  --color-income-surface: #edf6f1;
+  --color-expense-surface: #fbefee;
+  --color-info-surface: #edf3fb;
+  --color-info-foreground: #2c5487;
+  --color-brand-hover: #00327a;
+  --color-income-hover: #125a40;
+  --color-expense-hover: #9a3f3a;
 }
 
 @layer base {

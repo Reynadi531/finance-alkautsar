@@ -2,6 +2,7 @@ import { drizzleAdapter } from "@better-auth/drizzle-adapter/relations-v2";
 import type { Database } from "@keuangan-alkautsar/db";
 import * as schema from "@keuangan-alkautsar/db/schema/auth";
 import { betterAuth } from "better-auth";
+import { APIError } from "better-auth/api";
 import { tanstackStartCookies } from "better-auth/tanstack-start";
 
 export type AuthConfig = {
@@ -21,6 +22,23 @@ export function createAuth(env: AuthConfig, database: Database) {
       additionalFields: {
         // Assigned by an administrator, never by the user at sign-up.
         role: { type: ["admin", "treasurer", "viewer"], required: false, input: false },
+        deactivatedAt: { type: "date", required: false, input: false },
+      },
+    },
+    databaseHooks: {
+      session: {
+        create: {
+          // Deactivated accounts keep their history but can no longer sign in.
+          before: async (session, ctx) => {
+            const account = (await ctx?.context.internalAdapter.findUserById(session.userId)) as
+              | { deactivatedAt?: Date | null }
+              | null
+              | undefined;
+            if (account?.deactivatedAt) {
+              throw new APIError("FORBIDDEN", { message: "Akun ini sudah dinonaktifkan." });
+            }
+          },
+        },
       },
     },
     secret: env.BETTER_AUTH_SECRET,

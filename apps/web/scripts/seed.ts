@@ -36,13 +36,15 @@ async function seedLedger(createdBy: string, months: readonly string[]) {
   const categories = await db
     .insert(category)
     .values([
-      ...incomeNames.map((categoryName) => ({
+      ...incomeNames.map((categoryName, index) => ({
         kind: "income" as const,
         name: categoryName,
+        code: `PM-${String(index + 1).padStart(3, "0")}`,
       })),
-      ...expenseNames.map((categoryName) => ({
+      ...expenseNames.map((categoryName, index) => ({
         kind: "expense" as const,
         name: categoryName,
+        code: `PK-${String(index + 1).padStart(3, "0")}`,
       })),
     ])
     .returning();

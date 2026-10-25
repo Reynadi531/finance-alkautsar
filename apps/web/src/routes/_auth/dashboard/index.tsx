@@ -81,7 +81,10 @@ function DashboardPage() {
         <QuickActions role={overview.role} />
       </div>
 
-      <RecentTransactions transactions={overview.recent} />
+      <RecentTransactions
+        transactions={overview.recent}
+        showReportLink={overview.role !== "viewer"}
+      />
     </div>
   );
 }

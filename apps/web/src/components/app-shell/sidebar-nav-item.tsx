@@ -1,5 +1,5 @@
 import { cn } from "@keuangan-alkautsar/ui/lib/utils";
-import { Link } from "@tanstack/react-router";
+import { Link, useLocation } from "@tanstack/react-router";
 
 import type { NavItem, NavSection } from "./navigation";
 
@@ -17,7 +17,9 @@ export function SidebarNavItem({
   size: NavSection["size"];
   onNavigate?: () => void;
 }) {
-  const { icon: Icon, label, to } = item;
+  const { icon: Icon, label, to, activePaths } = item;
+  const pathname = useLocation({ select: (location) => location.pathname });
+  const extraActive = activePaths?.some((prefix) => pathname.startsWith(prefix)) ?? false;
   const sizeClassName = size === "compact" ? "h-[39px] text-xs" : "h-[42px] text-[13px]";
   const iconClassName = size === "compact" ? "size-[15px]" : "size-[17px]";
 
@@ -39,6 +41,7 @@ export function SidebarNavItem({
     <Link
       to={to}
       activeOptions={{ exact: true, includeSearch: false }}
+      aria-current={extraActive ? "page" : undefined}
       onClick={onNavigate}
       className={cn(
         itemClassName,
@@ -46,6 +49,7 @@ export function SidebarNavItem({
         "hover:bg-white/10",
         "data-[status=active]:bg-white data-[status=active]:font-bold data-[status=active]:text-brand",
         "[&[data-status=active]_svg]:text-brand",
+        extraActive && "bg-white font-bold text-brand [&_svg]:text-brand",
       )}
     >
       <Icon className={cn(iconClassName, "shrink-0 text-brand-muted")} aria-hidden />

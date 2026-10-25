@@ -18,6 +18,8 @@ export type NavItem = {
   icon: LucideIcon;
   /** Omitted while the destination screen is not built yet; the item renders disabled. */
   to?: LinkProps["to"];
+  /** Extra path prefixes that also highlight this item (e.g. sibling tabs of one screen). */
+  activePaths?: readonly string[];
   roles: readonly UserRole[];
 };
 
@@ -37,19 +39,40 @@ export const navSections: readonly NavSection[] = [
     size: "default",
     items: [
       { label: "Dashboard", icon: LayoutGrid, to: "/dashboard", roles: allMembers },
-      { label: "Uang Masuk", icon: ArrowUpRight, roles: financeStaff },
-      { label: "Uang Keluar", icon: ArrowDownLeft, roles: financeStaff },
-      { label: "Tipe Transaksi", icon: Rows3, roles: adminOnly },
-      { label: "Laporan Kas", icon: Columns3, roles: financeStaff },
+      {
+        label: "Uang Masuk",
+        icon: ArrowUpRight,
+        to: "/dashboard/transaksi/masuk",
+        roles: financeStaff,
+      },
+      {
+        label: "Uang Keluar",
+        icon: ArrowDownLeft,
+        to: "/dashboard/transaksi/keluar",
+        roles: financeStaff,
+      },
+      {
+        label: "Tipe Transaksi",
+        icon: Rows3,
+        to: "/dashboard/tipe-pemasukan",
+        activePaths: ["/dashboard/tipe-pengeluaran"],
+        roles: adminOnly,
+      },
+      { label: "Laporan Kas", icon: Columns3, to: "/dashboard/laporan", roles: financeStaff },
     ],
   },
   {
     label: "Administrasi",
     size: "compact",
     items: [
-      { label: "Pengguna", icon: User, roles: adminOnly },
-      { label: "Riwayat Perubahan", icon: Clock3, roles: financeStaff },
-      { label: "Pengaturan Masjid", icon: Settings, roles: adminOnly },
+      { label: "Pengguna", icon: User, to: "/dashboard/pengguna", roles: adminOnly },
+      {
+        label: "Riwayat Perubahan",
+        icon: Clock3,
+        to: "/dashboard/change-log",
+        roles: financeStaff,
+      },
+      { label: "Pengaturan Masjid", icon: Settings, to: "/dashboard/pengaturan", roles: adminOnly },
     ],
   },
 ];
@@ -66,5 +89,5 @@ export function visibleSections(role: UserRole | undefined) {
 export const roleLabels: Record<UserRole, string> = {
   admin: "Administrator",
   treasurer: "Bendahara",
-  viewer: "Peninjau",
+  viewer: "Pengurus",
 };

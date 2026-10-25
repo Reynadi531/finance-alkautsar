@@ -9,6 +9,8 @@ export const user = pgTable("user", {
   image: text("image"),
   // Null means the account exists but has no access to the mosque's finances.
   role: text("role", { enum: ["admin", "treasurer", "viewer"] }),
+  // Set when an administrator deactivates the account; such users cannot sign in.
+  deactivatedAt: timestamp("deactivated_at"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at")
     .defaultNow()

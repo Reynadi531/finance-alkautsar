@@ -1,3 +1,4 @@
+import { Link } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
 
 import { Panel, PanelHeader } from "@/components/panel";
@@ -15,21 +16,29 @@ export type RecentTransaction = {
 
 const kindLabels = { income: "Pemasukan", expense: "Pengeluaran" } as const;
 
-export function RecentTransactions({ transactions }: { transactions: RecentTransaction[] }) {
+export function RecentTransactions({
+  transactions,
+  showReportLink,
+}: {
+  transactions: RecentTransaction[];
+  /** The full list lives in the cash report, which viewers cannot open. */
+  showReportLink: boolean;
+}) {
   return (
     <Panel aria-labelledby="recent-title" className="gap-3 sm:p-5">
       <PanelHeader
         titleId="recent-title"
         title="Transaksi terbaru"
         action={
-          <span
-            aria-disabled="true"
-            title="Segera tersedia"
-            className="flex shrink-0 cursor-not-allowed items-center gap-1.5 text-xs font-bold text-link opacity-60"
-          >
-            Lihat semua
-            <ArrowRight className="size-3.5" aria-hidden />
-          </span>
+          showReportLink ? (
+            <Link
+              to="/dashboard/laporan"
+              className="flex shrink-0 items-center gap-1.5 rounded text-xs font-bold text-link outline-none hover:underline focus-visible:ring-2 focus-visible:ring-income/40"
+            >
+              Lihat semua
+              <ArrowRight className="size-3.5" aria-hidden />
+            </Link>
+          ) : null
         }
       />
 
