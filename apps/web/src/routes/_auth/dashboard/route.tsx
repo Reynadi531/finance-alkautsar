@@ -15,18 +15,18 @@ export const Route = createFileRoute("/_auth/dashboard")({
 function AppLayout() {
   const { shell } = Route.useRouteContext();
 
-  if (!shell.active) {
-    return <NoMosqueAccess email={shell.user.email} />;
+  if (!shell.role) {
+    return <NoAccess email={shell.user.email} mosqueName={shell.mosqueName} />;
   }
 
   return (
-    <AppShell user={shell.user} memberships={shell.memberships} active={shell.active}>
+    <AppShell user={shell.user} mosqueName={shell.mosqueName} role={shell.role}>
       <Outlet />
     </AppShell>
   );
 }
 
-function NoMosqueAccess({ email }: { email: string }) {
+function NoAccess({ email, mosqueName }: { email: string; mosqueName: string }) {
   const navigate = useNavigate();
 
   return (
@@ -34,10 +34,10 @@ function NoMosqueAccess({ email }: { email: string }) {
       <div className="flex w-full max-w-md flex-col gap-5 rounded-xl bg-white p-8">
         <p className="font-display text-xl font-bold text-brand">ruangmasjid</p>
         <div className="flex flex-col gap-2">
-          <h1 className="font-display text-2xl font-bold text-ink">Belum ada akses masjid</h1>
+          <h1 className="font-display text-2xl font-bold text-ink">Belum ada akses</h1>
           <p className="text-sm text-ink-muted">
-            Akun {email} belum terdaftar di masjid mana pun. Minta administrator masjid menambahkan
-            akun ini sebagai pengurus.
+            Akun {email} belum memiliki peran di {mosqueName}. Minta administrator menambahkan akun
+            ini sebagai pengurus.
           </p>
         </div>
         <button

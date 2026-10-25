@@ -24,7 +24,7 @@ export function AppShell({
       <header className="sticky top-0 z-30 flex items-center justify-between gap-3 bg-brand px-4 py-3 lg:hidden">
         <div className="min-w-0">
           <p className="font-display text-lg font-bold text-white">ruangmasjid</p>
-          <p className="truncate text-xs text-brand-muted">{sidebar.active.mosqueName}</p>
+          <p className="truncate text-xs text-brand-muted">{sidebar.mosqueName}</p>
         </div>
         <Sheet open={menuOpen} onOpenChange={setMenuOpen}>
           <SheetTrigger

@@ -1,12 +1,12 @@
 import { Plus, Rows3, Settings, type LucideIcon } from "lucide-react";
 
 import { Panel, PanelHeader } from "@/components/panel";
-import type { MemberRole } from "@/server/mosque-access";
+import type { UserRole } from "@/server/mosque";
 
 type QuickAction = {
   label: string;
   icon: LucideIcon;
-  roles: readonly MemberRole[];
+  roles: readonly UserRole[];
 };
 
 // Destinations (S02, S03, S06, S04) are not built yet, so each action renders disabled.
@@ -17,7 +17,7 @@ const actions: readonly QuickAction[] = [
   { label: "Kelola kategori", icon: Settings, roles: ["admin"] },
 ];
 
-export function QuickActions({ role }: { role: MemberRole }) {
+export function QuickActions({ role }: { role: UserRole }) {
   const visible = actions.filter((action) => action.roles.includes(role));
   if (visible.length === 0) return null;
 

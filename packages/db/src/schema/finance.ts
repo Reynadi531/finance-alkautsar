@@ -4,6 +4,7 @@ import {
   check,
   date,
   index,
+  integer,
   pgEnum,
   pgTable,
   text,
@@ -13,42 +14,23 @@ import {
 
 import { user } from "./auth";
 
-export const memberRole = pgEnum("member_role", ["admin", "treasurer", "viewer"]);
 export const transactionKind = pgEnum("transaction_kind", ["income", "expense"]);
 
-export const mosque = pgTable("mosque", {
-  id: text("id")
-    .primaryKey()
-    .$defaultFn(() => crypto.randomUUID()),
-  name: text("name").notNull(),
-  address: text("address"),
-  phone: text("phone"),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at")
-    .defaultNow()
-    .$onUpdate(() => new Date())
-    .notNull(),
-});
-
-export const mosqueMember = pgTable(
-  "mosque_member",
+// Single-tenant: the app serves one mosque, so its profile is a one-row table.
+export const mosque = pgTable(
+  "mosque",
   {
-    id: text("id")
-      .primaryKey()
-      .$defaultFn(() => crypto.randomUUID()),
-    mosqueId: text("mosque_id")
-      .notNull()
-      .references(() => mosque.id, { onDelete: "cascade" }),
-    userId: text("user_id")
-      .notNull()
-      .references(() => user.id, { onDelete: "cascade" }),
-    role: memberRole("role").notNull(),
+    id: integer("id").primaryKey().default(1),
+    name: text("name").notNull(),
+    address: text("address"),
+    phone: text("phone"),
     createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at")
+      .defaultNow()
+      .$onUpdate(() => new Date())
+      .notNull(),
   },
-  (table) => [
-    uniqueIndex("mosque_member_mosque_user_idx").on(table.mosqueId, table.userId),
-    index("mosque_member_user_idx").on(table.userId),
-  ],
+  (table) => [check("mosque_singleton", sql`${table.id} = 1`)],
 );
 
 export const category = pgTable(
@@ -57,9 +39,6 @@ export const category = pgTable(
     id: text("id")
       .primaryKey()
       .$defaultFn(() => crypto.randomUUID()),
-    mosqueId: text("mosque_id")
-      .notNull()
-      .references(() => mosque.id, { onDelete: "cascade" }),
     kind: transactionKind("kind").notNull(),
     name: text("name").notNull(),
     archivedAt: timestamp("archived_at"),
@@ -70,9 +49,9 @@ export const category = pgTable(
       .notNull(),
   },
   (table) => [
-    // Active names are unique per mosque and kind after case/whitespace normalization.
+    // Active names are unique per kind after case/whitespace normalization.
     uniqueIndex("category_active_name_idx")
-      .on(table.mosqueId, table.kind, sql`lower(btrim(${table.name}))`)
+      .on(table.kind, sql`lower(btrim(${table.name}))`)
       .where(sql`${table.archivedAt} is null`),
   ],
 );
@@ -83,9 +62,6 @@ export const ledgerTransaction = pgTable(
     id: text("id")
       .primaryKey()
       .$defaultFn(() => crypto.randomUUID()),
-    mosqueId: text("mosque_id")
-      .notNull()
-      .references(() => mosque.id, { onDelete: "cascade" }),
     kind: transactionKind("kind").notNull(),
     categoryId: text("category_id")
       .notNull()
@@ -108,6 +84,6 @@ export const ledgerTransaction = pgTable(
   },
   (table) => [
     check("ledger_transaction_amount_positive", sql`${table.amount} > 0`),
-    index("ledger_transaction_mosque_date_idx").on(table.mosqueId, table.effectiveDate),
+    index("ledger_transaction_date_idx").on(table.effectiveDate),
   ],
 );

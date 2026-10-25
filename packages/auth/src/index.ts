@@ -17,6 +17,12 @@ export function createAuth(env: AuthConfig, database: Database) {
     }),
     trustedOrigins: [env.BETTER_AUTH_URL],
     emailAndPassword: { enabled: true },
+    user: {
+      additionalFields: {
+        // Assigned by an administrator, never by the user at sign-up.
+        role: { type: ["admin", "treasurer", "viewer"], required: false, input: false },
+      },
+    },
     secret: env.BETTER_AUTH_SECRET,
     baseURL: env.BETTER_AUTH_URL,
     plugins: [tanstackStartCookies()],

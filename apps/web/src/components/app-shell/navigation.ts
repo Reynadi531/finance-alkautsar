@@ -11,14 +11,14 @@ import {
   type LucideIcon,
 } from "lucide-react";
 
-import type { MemberRole } from "@/server/mosque-access";
+import type { UserRole } from "@/server/mosque";
 
 export type NavItem = {
   label: string;
   icon: LucideIcon;
   /** Omitted while the destination screen is not built yet; the item renders disabled. */
   to?: LinkProps["to"];
-  roles: readonly MemberRole[];
+  roles: readonly UserRole[];
 };
 
 export type NavSection = {
@@ -54,7 +54,7 @@ export const navSections: readonly NavSection[] = [
   },
 ];
 
-export function visibleSections(role: MemberRole | undefined) {
+export function visibleSections(role: UserRole | undefined) {
   return navSections
     .map((section) => ({
       ...section,
@@ -63,7 +63,7 @@ export function visibleSections(role: MemberRole | undefined) {
     .filter((section) => section.items.length > 0);
 }
 
-export const roleLabels: Record<MemberRole, string> = {
+export const roleLabels: Record<UserRole, string> = {
   admin: "Administrator",
   treasurer: "Bendahara",
   viewer: "Peninjau",

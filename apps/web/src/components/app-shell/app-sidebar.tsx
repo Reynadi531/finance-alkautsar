@@ -1,25 +1,24 @@
-import type { Membership } from "@/server/mosque-access";
+import type { UserRole } from "@/server/mosque";
 
-import { MosqueSwitcher } from "./mosque-switcher";
 import { roleLabels, visibleSections } from "./navigation";
 import { SidebarNavItem } from "./sidebar-nav-item";
 import { UserProfileMenu } from "./user-profile-menu";
 
 export type AppSidebarProps = {
   user: { name: string; email: string };
-  memberships: Membership[];
-  active: Membership;
+  mosqueName: string;
+  role: UserRole;
   onNavigate?: () => void;
 };
 
-export function AppSidebar({ user, memberships, active, onNavigate }: AppSidebarProps) {
-  const sections = visibleSections(active.role);
+export function AppSidebar({ user, mosqueName, role, onNavigate }: AppSidebarProps) {
+  const sections = visibleSections(role);
 
   return (
     <div className="flex h-full flex-col gap-2.5 bg-brand px-4 py-7">
       <div className="flex flex-col gap-[5px] px-2.5 pb-6">
         <p className="font-display text-xl font-bold text-white">ruangmasjid</p>
-        <MosqueSwitcher memberships={memberships} activeId={active.mosqueId} />
+        <p className="text-xs text-brand-muted">{mosqueName}</p>
       </div>
       <div className="h-px bg-white/20" />
 
@@ -41,7 +40,7 @@ export function AppSidebar({ user, memberships, active, onNavigate }: AppSidebar
       </nav>
 
       <div className="mt-auto">
-        <UserProfileMenu name={user.name} email={user.email} roleLabel={roleLabels[active.role]} />
+        <UserProfileMenu name={user.name} email={user.email} roleLabel={roleLabels[role]} />
       </div>
     </div>
   );
