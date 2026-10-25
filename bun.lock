@@ -21,6 +21,7 @@
     "apps/web": {
       "name": "web",
       "dependencies": {
+        "@base-ui/react": "^1.8.0",
         "@keuangan-alkautsar/auth": "workspace:*",
         "@keuangan-alkautsar/db": "workspace:*",
         "@keuangan-alkautsar/storage": "workspace:*",
