@@ -48,7 +48,7 @@ export type UserRow = Awaited<ReturnType<typeof listUsers>>["users"][number];
 /** S07 list: summary counts, filtered page of users, and each user's latest session activity. */
 export const listUsers = createServerFn({ method: "GET" })
   .middleware([authMiddleware])
-  .inputValidator(userListSearchSchema)
+  .validator(userListSearchSchema)
   .handler(async ({ context, data: search }) => {
     const actor = requireRole(context.session, adminOnly);
 
@@ -166,7 +166,7 @@ export type CreateUserResult =
  */
 export const createUser = createServerFn({ method: "POST" })
   .middleware([authMiddleware])
-  .inputValidator(createUserSchema)
+  .validator(createUserSchema)
   .handler(async ({ context, data }): Promise<CreateUserResult> => {
     const actor = requireRole(context.session, adminOnly);
     const authContext = await auth.$context;
@@ -228,7 +228,7 @@ export const updateUserSchema = z.object({
 /** Changes a user's name and role. Admins cannot demote themselves or the last active admin. */
 export const updateUser = createServerFn({ method: "POST" })
   .middleware([authMiddleware])
-  .inputValidator(updateUserSchema)
+  .validator(updateUserSchema)
   .handler(async ({ context, data }) => {
     const actor = requireRole(context.session, adminOnly);
     const before = await findUser(data.id);
@@ -260,7 +260,7 @@ export const updateUser = createServerFn({ method: "POST" })
 
 export const setUserActive = createServerFn({ method: "POST" })
   .middleware([authMiddleware])
-  .inputValidator(z.object({ id: z.string().min(1), active: z.boolean() }))
+  .validator(z.object({ id: z.string().min(1), active: z.boolean() }))
   .handler(async ({ context, data }) => {
     const actor = requireRole(context.session, adminOnly);
     const before = await findUser(data.id);
@@ -302,7 +302,7 @@ export const setUserActive = createServerFn({ method: "POST" })
  */
 export const resetUserPassword = createServerFn({ method: "POST" })
   .middleware([authMiddleware])
-  .inputValidator(z.object({ id: z.string().min(1), password: passwordSchema }))
+  .validator(z.object({ id: z.string().min(1), password: passwordSchema }))
   .handler(async ({ context, data }) => {
     const actor = requireRole(context.session, adminOnly);
     const target = await findUser(data.id);

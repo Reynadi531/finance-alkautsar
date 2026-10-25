@@ -148,7 +148,7 @@ export type CategoryList = Awaited<ReturnType<typeof getCategoryList>>;
 /** Categories of one kind with usage figures, filtered by status and search text. */
 export const getCategoryList = createServerFn({ method: "GET" })
   .middleware([authMiddleware])
-  .inputValidator(
+  .validator(
     z.object({
       kind: kindSchema,
       status: categoryStatusSchema,
@@ -239,7 +239,7 @@ export const getCategoryList = createServerFn({ method: "GET" })
 /** Create (no `id`) or update a category. Returns field errors instead of throwing. */
 export const saveCategory = createServerFn({ method: "POST" })
   .middleware([authMiddleware])
-  .inputValidator(
+  .validator(
     z.object({
       id: z.string().optional(),
       kind: kindSchema,
@@ -313,7 +313,7 @@ export const saveCategory = createServerFn({ method: "POST" })
 /** Archive (hide from transaction forms) or restore a category. */
 export const setCategoryArchived = createServerFn({ method: "POST" })
   .middleware([authMiddleware])
-  .inputValidator(z.object({ id: z.string(), archived: z.boolean() }))
+  .validator(z.object({ id: z.string(), archived: z.boolean() }))
   .handler(async ({ context, data }): Promise<CategoryMutationResult> => {
     const actor = requireRole(context.session, adminOnly);
     try {
@@ -360,7 +360,7 @@ export const setCategoryArchived = createServerFn({ method: "POST" })
 /** Permanently delete a category that no transaction (including deleted ones) references. */
 export const deleteCategory = createServerFn({ method: "POST" })
   .middleware([authMiddleware])
-  .inputValidator(z.object({ id: z.string() }))
+  .validator(z.object({ id: z.string() }))
   .handler(async ({ context, data }): Promise<CategoryMutationResult> => {
     const actor = requireRole(context.session, adminOnly);
     return db.transaction(async (tx): Promise<CategoryMutationResult> => {

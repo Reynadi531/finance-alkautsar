@@ -24,7 +24,7 @@ export type {
 /** Everything S02/S03 render: summaries for the month, top category, one page of rows. */
 export const getTransactionPage = createServerFn({ method: "GET" })
   .middleware([authMiddleware])
-  .inputValidator(transactionPageInputSchema)
+  .validator(transactionPageInputSchema)
   .handler(({ context, data }) =>
     loadTransactionPage(requireRole(context.session, financeStaff), data),
   );
@@ -32,7 +32,7 @@ export const getTransactionPage = createServerFn({ method: "GET" })
 /** Creates (no `id`) or updates a transaction from the S02/S03 form, with optional proof file. */
 export const saveTransaction = createServerFn({ method: "POST" })
   .middleware([authMiddleware])
-  .inputValidator((data: FormData) => {
+  .validator((data: FormData) => {
     if (!(data instanceof FormData)) throw new Error("Data formulir tidak valid.");
     return data;
   })
@@ -43,7 +43,7 @@ export const saveTransaction = createServerFn({ method: "POST" })
 /** Soft-deletes a transaction (sets `deletedAt`) and records it in the change log. */
 export const deleteTransaction = createServerFn({ method: "POST" })
   .middleware([authMiddleware])
-  .inputValidator(z.object({ id: z.string().min(1) }))
+  .validator(z.object({ id: z.string().min(1) }))
   .handler(({ context, data }) =>
     softDeleteTransaction(requireRole(context.session, financeStaff), data),
   );
@@ -51,7 +51,7 @@ export const deleteTransaction = createServerFn({ method: "POST" })
 /** Imports a CSV of one kind; all rows are saved or none are. */
 export const importTransactions = createServerFn({ method: "POST" })
   .middleware([authMiddleware])
-  .inputValidator(importInputSchema)
+  .validator(importInputSchema)
   .handler(({ context, data }) =>
     importTransactionCsv(requireRole(context.session, financeStaff), data),
   );

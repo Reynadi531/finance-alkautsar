@@ -14,7 +14,7 @@ export type CashReportPage = Awaited<ReturnType<typeof getCashReport>>;
 /** S06 screen data: full-period computation, then one page of rows with balances intact. */
 export const getCashReport = createServerFn({ method: "GET" })
   .middleware([authMiddleware])
-  .inputValidator(reportQuerySchema.and(z.object({ page: z.number().int().min(1).default(1) })))
+  .validator(reportQuerySchema.and(z.object({ page: z.number().int().min(1).default(1) })))
   .handler(async ({ context, data }) => {
     requireRole(context.session, financeStaff);
     const { page: requestedPage, ...query } = data;
@@ -51,7 +51,7 @@ export const getCashReport = createServerFn({ method: "GET" })
 /** Row count for the export dialog footer when its period or scope differs from the screen. */
 export const getReportRowCount = createServerFn({ method: "GET" })
   .middleware([authMiddleware])
-  .inputValidator(reportQuerySchema)
+  .validator(reportQuerySchema)
   .handler(async ({ context, data }) => {
     requireRole(context.session, financeStaff);
     return countReportRows(data);

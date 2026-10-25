@@ -41,7 +41,7 @@ export type DashboardOverview = Awaited<ReturnType<typeof getDashboardOverview>>
 
 export const getDashboardOverview = createServerFn({ method: "GET" })
   .middleware([authMiddleware])
-  .inputValidator(rangeSchema)
+  .validator(rangeSchema)
   .handler(async ({ context, data: range }) => {
     if (!context.session) {
       throw new Error("Unauthorized");

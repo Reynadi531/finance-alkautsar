@@ -45,7 +45,7 @@ export const mosqueProfileSchema = z.object({
 
 export const saveMosqueProfile = createServerFn({ method: "POST" })
   .middleware([authMiddleware])
-  .inputValidator(mosqueProfileSchema)
+  .validator(mosqueProfileSchema)
   .handler(async ({ context, data }) => {
     const actor = requireRole(context.session, adminOnly);
     return updateMosque(actor.id, "Mengubah pengaturan masjid", data);
@@ -54,7 +54,7 @@ export const saveMosqueProfile = createServerFn({ method: "POST" })
 /** Replaces the sign-in page background. Expects FormData with a `file` entry. */
 export const uploadLoginBackground = createServerFn({ method: "POST" })
   .middleware([authMiddleware])
-  .inputValidator((data: FormData) => data)
+  .validator((data: FormData) => data)
   .handler(async ({ context, data }) => {
     const actor = requireRole(context.session, adminOnly);
     const file = data.get("file");
@@ -105,7 +105,7 @@ export const removeLoginBackground = createServerFn({ method: "POST" })
 
 export const setPublicReport = createServerFn({ method: "POST" })
   .middleware([authMiddleware])
-  .inputValidator(z.object({ enabled: z.boolean() }))
+  .validator(z.object({ enabled: z.boolean() }))
   .handler(async ({ context, data }) => {
     const actor = requireRole(context.session, adminOnly);
     return updateMosque(

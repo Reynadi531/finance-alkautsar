@@ -78,7 +78,7 @@ export type ChangeLogEntry = Awaited<ReturnType<typeof getChangeLog>>["rows"][nu
 /** One page of history plus the summary cards and actor options (S08). */
 export const getChangeLog = createServerFn({ method: "GET" })
   .middleware([authMiddleware])
-  .inputValidator(changeLogSearchSchema)
+  .validator(changeLogSearchSchema)
   .handler(async ({ context, data }) => {
     requireRole(context.session, financeStaff);
     const where = filterConditions(data);
@@ -154,7 +154,7 @@ function csvCell(value: string) {
  */
 export const exportChangeLog = createServerFn({ method: "GET" })
   .middleware([authMiddleware])
-  .inputValidator(filtersSchema)
+  .validator(filtersSchema)
   .handler(async ({ context, data }) => {
     requireRole(context.session, financeStaff);
     const rows = await db
