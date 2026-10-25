@@ -2,7 +2,6 @@ import { sql } from "drizzle-orm";
 import {
   bigint,
   boolean,
-  bytea,
   check,
   date,
   index,
@@ -19,7 +18,8 @@ import { user } from "./auth";
 
 export const transactionKind = pgEnum("transaction_kind", ["income", "expense"]);
 
-// Uploaded files (transaction proofs, login background) live in Postgres; each is at most 5 MB.
+// Metadata for uploaded files (transaction proofs, login background); each is at most 5 MB.
+// The bytes live in S3-compatible object storage under `key`.
 export const storedFile = pgTable("stored_file", {
   id: text("id")
     .primaryKey()
@@ -27,7 +27,7 @@ export const storedFile = pgTable("stored_file", {
   fileName: text("file_name").notNull(),
   mimeType: text("mime_type").notNull(),
   size: integer("size").notNull(),
-  data: bytea("data").notNull(),
+  key: text("key").notNull().unique(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 

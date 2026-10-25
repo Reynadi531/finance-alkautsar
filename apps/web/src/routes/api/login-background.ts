@@ -2,7 +2,7 @@ import { mosque, storedFile } from "@keuangan-alkautsar/db/schema/finance";
 import { createFileRoute } from "@tanstack/react-router";
 import { eq } from "drizzle-orm";
 
-import { db } from "@/services";
+import { db, storage } from "@/services";
 
 /**
  * Public sign-in page background configured in S09. No session required, since visitors
@@ -14,20 +14,21 @@ export const Route = createFileRoute("/api/login-background")({
       GET: async () => {
         const [file] = await db
           .select({
-            data: storedFile.data,
+            key: storedFile.key,
             mimeType: storedFile.mimeType,
             size: storedFile.size,
           })
           .from(mosque)
           .innerJoin(storedFile, eq(storedFile.id, mosque.loginBackgroundFileId))
           .where(eq(mosque.id, 1));
-        if (!file) {
+        const object = file && (await storage.get(file.key));
+        if (!object) {
           return new Response("Not found", {
             status: 404,
             headers: { "Cache-Control": "no-cache" },
           });
         }
-        return new Response(new Uint8Array(file.data), {
+        return new Response(object.body, {
           headers: {
             "Content-Type": file.mimeType,
             "Content-Length": String(file.size),

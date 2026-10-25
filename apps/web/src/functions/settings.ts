@@ -1,11 +1,15 @@
-import { storedFile } from "@keuangan-alkautsar/db/schema/finance";
 import { createServerFn } from "@tanstack/react-start";
-import { eq } from "drizzle-orm";
 import z from "zod";
 
 import { authMiddleware } from "@/middleware/auth";
 import { adminOnly, requireRole } from "@/server/authz";
-import { assertUpload, imageMimeTypes, saveUpload } from "@/server/files";
+import {
+  assertUpload,
+  deleteStoredFile,
+  imageMimeTypes,
+  removeObjects,
+  saveUpload,
+} from "@/server/files";
 import { loadSettings, updateMosque, type MosqueSettings } from "@/server/settings";
 import { db } from "@/services";
 
@@ -60,18 +64,22 @@ export const uploadLoginBackground = createServerFn({ method: "POST" })
     assertUpload(file, imageMimeTypes);
 
     const previousId = (await loadSettings(db)).loginBackground?.id;
-    const fileId = await db.transaction(async (tx) => saveUpload(tx, file));
+    const saved = await saveUpload(db, file);
+    let previousKey: string | undefined;
     try {
-      return await updateMosque(
+      const settings = await updateMosque(
         actor.id,
         "Mengganti latar halaman masuk",
-        { loginBackgroundFileId: fileId },
+        { loginBackgroundFileId: saved.id },
         async (tx) => {
-          if (previousId) await tx.delete(storedFile).where(eq(storedFile.id, previousId));
+          if (previousId) previousKey = await deleteStoredFile(tx, previousId);
         },
       );
+      await removeObjects(previousKey);
+      return settings;
     } catch (error) {
-      await db.delete(storedFile).where(eq(storedFile.id, fileId));
+      await deleteStoredFile(db, saved.id);
+      await removeObjects(saved.key);
       throw error;
     }
   });
@@ -82,14 +90,17 @@ export const removeLoginBackground = createServerFn({ method: "POST" })
     const actor = requireRole(context.session, adminOnly);
     const previousId = (await loadSettings(db)).loginBackground?.id;
     if (!previousId) throw new Error("Belum ada gambar latar yang tersimpan.");
-    return updateMosque(
+    let previousKey: string | undefined;
+    const settings = await updateMosque(
       actor.id,
       "Menghapus latar halaman masuk",
       { loginBackgroundFileId: null },
       async (tx) => {
-        await tx.delete(storedFile).where(eq(storedFile.id, previousId));
+        previousKey = await deleteStoredFile(tx, previousId);
       },
     );
+    await removeObjects(previousKey);
+    return settings;
   });
 
 export const setPublicReport = createServerFn({ method: "POST" })

@@ -17,8 +17,15 @@ services:
       BETTER_AUTH_URL: http://localhost:3001
       CORS_ORIGIN: http://localhost:3001
       DATABASE_URL: postgresql://postgres:${POSTGRES_PASSWORD:-password}@postgres:5432/keuangan-alkautsar
+      S3_ENDPOINT: http://rustfs:9000
+      S3_REGION: us-east-1
+      S3_BUCKET: keuangan-alkautsar
+      S3_ACCESS_KEY_ID: ${RUSTFS_ACCESS_KEY:-rustfsadmin}
+      S3_SECRET_ACCESS_KEY: ${RUSTFS_SECRET_KEY:-rustfsadmin}
     depends_on:
       postgres:
+        condition: service_healthy
+      rustfs:
         condition: service_healthy
     healthcheck:
       test:
@@ -52,8 +59,44 @@ services:
       retries: 5
     restart: unless-stopped
 
+  # S3-compatible object storage for uploads (dev only). Console: http://localhost:9001
+  rustfs:
+    image: rustfs/rustfs:1.0.3
+    container_name: keuangan-alkautsar-rustfs
+    depends_on:
+      rustfs-volume-permissions:
+        condition: service_completed_successfully
+    environment:
+      RUSTFS_VOLUMES: /data
+      RUSTFS_ADDRESS: 0.0.0.0:9000
+      RUSTFS_CONSOLE_ADDRESS: 0.0.0.0:9001
+      RUSTFS_CONSOLE_ENABLE: "true"
+      RUSTFS_ACCESS_KEY: ${RUSTFS_ACCESS_KEY:-rustfsadmin}
+      RUSTFS_SECRET_KEY: ${RUSTFS_SECRET_KEY:-rustfsadmin}
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - keuangan-alkautsar_rustfs_data:/data
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://127.0.0.1:9000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    restart: unless-stopped
+
+  # RustFS runs as UID 10001; named volumes start out owned by root.
+  rustfs-volume-permissions:
+    image: alpine:3.22
+    volumes:
+      - keuangan-alkautsar_rustfs_data:/data
+    command: chown -R 10001:10001 /data
+    restart: "no"
+
 volumes:
   keuangan-alkautsar_postgres_data:
+  keuangan-alkautsar_rustfs_data:
 
 # BuildKit makes these available only while install/build commands run.
 secrets:

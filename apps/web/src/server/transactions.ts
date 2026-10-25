@@ -23,7 +23,13 @@ import { pageOffset } from "@/lib/pagination";
 import { transactionRef } from "@/lib/references";
 import { recordAudit, type AuditSnapshots } from "@/server/audit";
 import type { requireRole } from "@/server/authz";
-import { assertUpload, proofMimeTypes, saveUpload } from "@/server/files";
+import {
+  assertUpload,
+  deleteStoredFile,
+  proofMimeTypes,
+  removeObjects,
+  saveUpload,
+} from "@/server/files";
 import { db } from "@/services";
 
 /**
@@ -315,57 +321,69 @@ export async function saveTransactionForm(user: StaffUser, data: FormData): Prom
   };
   const noun = kindCopy[fields.kind].noun;
 
-  return db.transaction(async (tx) => {
-    let proofFileId = existing?.proofFileId ?? null;
-    let proofFileName = existing?.proofFileName ?? null;
-    const replacesProof = Boolean(upload) || fields.removeProof === "1";
-    if (replacesProof && existing?.proofFileId) {
-      await tx.delete(storedFile).where(eq(storedFile.id, existing.proofFileId));
-      proofFileId = null;
-      proofFileName = null;
-    }
-    if (upload) {
-      proofFileId = await saveUpload(tx, upload);
-      proofFileName = upload.name;
-    }
+  // Object keys to remove once the transaction commits (replaced proof) or rolls back (new proof).
+  let replacedKey: string | undefined;
+  let uploadedKey: string | undefined;
+  const result = await db
+    .transaction(async (tx) => {
+      let proofFileId = existing?.proofFileId ?? null;
+      let proofFileName = existing?.proofFileName ?? null;
+      const replacesProof = Boolean(upload) || fields.removeProof === "1";
+      if (replacesProof && existing?.proofFileId) {
+        replacedKey = await deleteStoredFile(tx, existing.proofFileId);
+        proofFileId = null;
+        proofFileName = null;
+      }
+      if (upload) {
+        const saved = await saveUpload(tx, upload);
+        uploadedKey = saved.key;
+        proofFileId = saved.id;
+        proofFileName = upload.name;
+      }
 
-    const after = snapshot(values, chosenCategory.name, proofFileName);
+      const after = snapshot(values, chosenCategory.name, proofFileName);
 
-    if (existing) {
-      await tx
-        .update(ledgerTransaction)
-        .set({ ...values, proofFileId })
-        .where(eq(ledgerTransaction.id, existing.id));
-      const ref = transactionRef(fields.kind, existing.number, values.effectiveDate);
+      if (existing) {
+        await tx
+          .update(ledgerTransaction)
+          .set({ ...values, proofFileId })
+          .where(eq(ledgerTransaction.id, existing.id));
+        const ref = transactionRef(fields.kind, existing.number, values.effectiveDate);
+        await recordAudit(tx, {
+          actorId: user.id,
+          action: "update",
+          entity: "transaction",
+          entityId: existing.id,
+          entityLabel: `${chosenCategory.name} · ${ref}`,
+          summary: `Mengubah transaksi ${noun}`,
+          before: snapshot(existing, existing.categoryName, existing.proofFileName),
+          after,
+        });
+        return { ok: true as const, ref };
+      }
+
+      const [created] = await tx
+        .insert(ledgerTransaction)
+        .values({ ...values, proofFileId, createdBy: user.id })
+        .returning({ id: ledgerTransaction.id, number: ledgerTransaction.number });
+      const ref = transactionRef(fields.kind, created.number, values.effectiveDate);
       await recordAudit(tx, {
         actorId: user.id,
-        action: "update",
+        action: "create",
         entity: "transaction",
-        entityId: existing.id,
+        entityId: created.id,
         entityLabel: `${chosenCategory.name} · ${ref}`,
-        summary: `Mengubah transaksi ${noun}`,
-        before: snapshot(existing, existing.categoryName, existing.proofFileName),
+        summary: `Menambahkan transaksi ${noun}`,
         after,
       });
       return { ok: true as const, ref };
-    }
-
-    const [created] = await tx
-      .insert(ledgerTransaction)
-      .values({ ...values, proofFileId, createdBy: user.id })
-      .returning({ id: ledgerTransaction.id, number: ledgerTransaction.number });
-    const ref = transactionRef(fields.kind, created.number, values.effectiveDate);
-    await recordAudit(tx, {
-      actorId: user.id,
-      action: "create",
-      entity: "transaction",
-      entityId: created.id,
-      entityLabel: `${chosenCategory.name} · ${ref}`,
-      summary: `Menambahkan transaksi ${noun}`,
-      after,
+    })
+    .catch(async (error: unknown) => {
+      await removeObjects(uploadedKey);
+      throw error;
     });
-    return { ok: true as const, ref };
-  });
+  await removeObjects(replacedKey);
+  return result;
 }
 
 /** Soft-deletes a transaction (sets `deletedAt`) and records it in the change log. */
