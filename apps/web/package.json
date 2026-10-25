@@ -9,6 +9,7 @@
     "check-types": "vite build && tsc --noEmit",
     "env:generate": "varlock codegen",
     "db:seed": "varlock run -- bun scripts/seed.ts",
+    "db:seed:admin": "varlock run -- bun scripts/seed-admin.ts",
     "auth:generate": "varlock run -- bun x auth@latest generate --config src/services.ts --output ../../packages/db/src/schema/auth.ts --yes"
   },
   "dependencies": {

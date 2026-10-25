@@ -32,6 +32,10 @@
     "db:seed": {
       "cache": false
     },
+    "db:seed:admin": {
+      "cache": false,
+      "env": ["ADMIN_EMAIL", "ADMIN_PASSWORD", "ADMIN_NAME"]
+    },
     "db:studio": {
       "cache": false,
       "persistent": true
