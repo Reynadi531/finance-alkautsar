@@ -129,3 +129,27 @@ keuangan-alkautsar/
 ## Better Auth Schema Generation
 
 After changing auth plugins or schema options, run `bun run auth:generate` from the project root. The script runs the Better Auth CLI through `varlock run` from the owning app directory, loading the auth instance from `src/services.ts`. Review the schema changes, then use your ORM's migration workflow to apply them.
+
+## Deploying to Vercel
+
+The web app builds with Nitro's `vercel` preset whenever `VERCEL` is set, and with `node-server` otherwise (Docker). On Vercel, Varlock bakes the resolved env into the server bundle, encrypted with `_VARLOCK_ENV_KEY`.
+
+1. Import the repo in Vercel and set **Root Directory** to `apps/web`. `apps/web/vercel.json` sets the install and build commands.
+2. Generate an encryption key per environment and add it as an env var, available at build and runtime:
+
+   ```bash
+   cd apps/web
+   bun x varlock generate-key --plain | vercel env add _VARLOCK_ENV_KEY production --sensitive
+   bun x varlock generate-key --plain | vercel env add _VARLOCK_ENV_KEY preview --sensitive
+   ```
+
+3. Add the remaining variables from `apps/web/.env.schema`: `BETTER_AUTH_SECRET`, `DATABASE_URL` (use a pooled connection string, e.g. Neon or Supabase pooler), and the `S3_*` values for real object storage (AWS S3, Cloudflare R2, …).
+4. `BETTER_AUTH_URL` defaults to the production domain on production and the deployment URL on previews. Set it explicitly to pin a custom domain.
+5. Apply the schema to the production database from your machine, then create the first admin:
+
+   ```bash
+   DATABASE_URL=<production-url> bun run db:push
+   DATABASE_URL=<production-url> ADMIN_EMAIL=… ADMIN_PASSWORD=… ADMIN_NAME=… bun run db:seed:admin
+   ```
+
+Vercel limits request bodies to 4.5 MB, which caps file uploads below the app's 5 MB limit.
