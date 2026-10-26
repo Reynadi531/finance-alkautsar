@@ -1,0 +1,90 @@
+name: keuangan-alkautsar
+
+# Runs the prebuilt image from GHCR. Copy this file and a `.env` next to it on the server, then:
+#   docker compose -f docker-compose.prod.yml pull
+#   docker compose -f docker-compose.prod.yml up -d
+# Required in `.env`: BETTER_AUTH_SECRET (32+ chars), BETTER_AUTH_URL (public URL), POSTGRES_PASSWORD,
+# RUSTFS_ACCESS_KEY, RUSTFS_SECRET_KEY. Pin a release with WEB_IMAGE_TAG (defaults to latest).
+
+services:
+  web:
+    image: ghcr.io/reynadi531/finance-alkautsar:${WEB_IMAGE_TAG:-latest}
+    init: true
+    ports:
+      - "${WEB_PORT:-3001}:3001"
+    environment:
+      NODE_ENV: production
+      BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET:?set BETTER_AUTH_SECRET}
+      BETTER_AUTH_URL: ${BETTER_AUTH_URL:?set BETTER_AUTH_URL}
+      DATABASE_URL: postgresql://postgres:${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD}@postgres:5432/keuangan-alkautsar
+      S3_ENDPOINT: ${S3_ENDPOINT:-http://rustfs:9000}
+      S3_REGION: ${S3_REGION:-us-east-1}
+      S3_BUCKET: ${S3_BUCKET:-keuangan-alkautsar}
+      S3_ACCESS_KEY_ID: ${RUSTFS_ACCESS_KEY:?set RUSTFS_ACCESS_KEY}
+      S3_SECRET_ACCESS_KEY: ${RUSTFS_SECRET_KEY:?set RUSTFS_SECRET_KEY}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rustfs:
+        condition: service_healthy
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "node",
+          "-e",
+          "fetch('http://localhost:3001/').then((r) => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:18-alpine
+    environment:
+      POSTGRES_DB: keuangan-alkautsar
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  # S3-compatible storage for uploads. Drop this service and set S3_* to use AWS S3, R2, etc.
+  rustfs:
+    image: rustfs/rustfs:1.0.3
+    depends_on:
+      rustfs-volume-permissions:
+        condition: service_completed_successfully
+    environment:
+      RUSTFS_VOLUMES: /data
+      RUSTFS_ADDRESS: 0.0.0.0:9000
+      RUSTFS_ACCESS_KEY: ${RUSTFS_ACCESS_KEY:?set RUSTFS_ACCESS_KEY}
+      RUSTFS_SECRET_KEY: ${RUSTFS_SECRET_KEY:?set RUSTFS_SECRET_KEY}
+    volumes:
+      - rustfs_data:/data
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://127.0.0.1:9000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    restart: unless-stopped
+
+  # RustFS runs as UID 10001; named volumes start out owned by root.
+  rustfs-volume-permissions:
+    image: alpine:3.22
+    volumes:
+      - rustfs_data:/data
+    command: chown -R 10001:10001 /data
+    restart: "no"
+
+volumes:
+  postgres_data:
+  rustfs_data:

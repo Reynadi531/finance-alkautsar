@@ -90,7 +90,20 @@ Run standalone Node/Bun tools that use Varlock from the owning app directory so 
 - Logs: bun run docker:logs
 - Stop: bun run docker:down
 
-Environment variables are read from each app's `.env` file (baked into web builds for public variables) and overridden in `docker-compose.yml` for container networking.
+Environment variables are read from each app's `.env` file at container start and overridden in `docker-compose.yml` for container networking. The image bakes in no secrets.
+
+### Prebuilt image (GHCR)
+
+`.github/workflows/docker.yml` builds `apps/web/Dockerfile` (Alpine, `linux/amd64` + `linux/arm64`) and pushes it to `ghcr.io/reynadi531/finance-alkautsar` on every push to `main` (`latest`, `main`, `sha-…`) and on `v*` tags (`1.2.3`, `1.2`). Pull requests build without pushing.
+
+To deploy it, copy `docker-compose.prod.yml` to the server with a `.env` next to it that sets `BETTER_AUTH_SECRET`, `BETTER_AUTH_URL`, `POSTGRES_PASSWORD`, `RUSTFS_ACCESS_KEY` and `RUSTFS_SECRET_KEY` (optionally `WEB_IMAGE_TAG` and `WEB_PORT`), then:
+
+```bash
+docker compose -f docker-compose.prod.yml pull
+docker compose -f docker-compose.prod.yml up -d
+```
+
+The image does not apply the database schema; run `bun run db:push` against the production database first. If the GHCR package is private, `docker login ghcr.io` on the server with a token that has `read:packages`.
 
 For more details, see the guide on [Deploying with Docker Compose](https://www.better-t-stack.dev/docs/guides/docker).
 
