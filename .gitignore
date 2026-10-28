@@ -59,3 +59,4 @@ temp
 
 references
 .env*
+!.env.prod.example
