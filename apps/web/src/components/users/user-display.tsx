@@ -15,14 +15,11 @@ const roleTone: Record<UserRole, BadgeTone> = {
   viewer: "neutral",
 };
 
-// Avatar tints from the S07 design; no theme tokens exist for these pastel swatches.
 const avatarTints = [
-  "bg-[#DDEBFA]",
-  "bg-[#E5EFE8]",
-  "bg-[#F6E9DC]",
-  "bg-[#E8E6F4]",
-  "bg-[#EDF0F2]",
-  "bg-[#F4E6EA]",
+  "bg-action",
+  "bg-action-hover",
+  "bg-muted-surface",
+  "bg-income-surface",
 ] as const;
 
 export function initials(name: string) {
@@ -46,7 +43,7 @@ export function UserAvatar({ id, name }: { id: string; name: string }) {
     <span
       aria-hidden
       className={cn(
-        "flex size-[34px] shrink-0 items-center justify-center rounded-full text-[11px] font-bold text-[#29465E]",
+        "flex size-[34px] shrink-0 items-center justify-center rounded-full text-[11px] font-bold text-action-foreground",
         tintFor(id),
       )}
     >

@@ -2,7 +2,7 @@ import { Input } from "@keuangan-alkautsar/ui/components/input";
 import { Label } from "@keuangan-alkautsar/ui/components/label";
 import { Popover, PopoverContent, PopoverTrigger } from "@keuangan-alkautsar/ui/components/popover";
 import { cn } from "@keuangan-alkautsar/ui/lib/utils";
-import { ChevronDown, Clock3 } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import { useId, useState } from "react";
 
 import { ActionButton } from "@/components/action-button";
@@ -52,7 +52,11 @@ function monthOptions(
 }
 
 const pillClassName =
-  "flex h-[38px] items-center gap-2 rounded-lg border border-line bg-white px-3.5 text-[13px] font-bold text-ink-strong outline-none hover:bg-canvas focus-visible:ring-2 focus-visible:ring-brand/30";
+  "flex h-12 w-full items-center justify-between gap-3 rounded-lg border border-control bg-white px-4 text-[13px] font-semibold text-ink outline-none hover:bg-muted-surface focus-visible:ring-2 focus-visible:ring-primary-action/30 sm:w-auto sm:min-w-[154px]";
+
+/** Same toolbar button look for the AppSelect triggers (overrides its 38px filter pill). */
+const selectTriggerClassName =
+  "h-12 w-full justify-between gap-3 border-control px-4 font-semibold text-ink hover:bg-muted-surface data-[size=default]:h-12 sm:w-auto sm:min-w-[154px]";
 
 /** Month picker: selecting a month sets the range to that full calendar month. */
 export function MonthFilter({
@@ -75,7 +79,7 @@ export function MonthFilter({
         const from = `${month}-01`;
         onChange({ from, to: endOfMonth(from) });
       }}
-      className="text-ink-strong"
+      className={selectTriggerClassName}
     />
   );
 }
@@ -120,18 +124,17 @@ export function CustomRangeFilter({
       }}
     >
       <PopoverTrigger
-        className={cn(pillClassName, custom && "border-brand/40 text-brand")}
+        className={cn(pillClassName, custom && "border-primary-action/40 text-link")}
         aria-label={
           custom ? `Rentang tanggal: ${formatRange(range)}. Ubah rentang` : "Pilih rentang tanggal"
         }
       >
-        <Clock3 className="size-3.5" aria-hidden />
-        {custom ? formatRange(range) : "Pilih tanggal"}
-        <ChevronDown className="size-4 text-ink-muted" aria-hidden />
+        <span className="truncate">{custom ? formatRange(range) : "Pilih tanggal"}</span>
+        <ChevronDown className="size-4 shrink-0 text-ink" aria-hidden />
       </PopoverTrigger>
       <PopoverContent
         align="start"
-        className="w-[min(22rem,calc(100vw-2rem))] gap-4 rounded-xl bg-white p-4 text-ink"
+        className="w-[min(22rem,calc(100vw-2rem))] gap-4 rounded-[10px] bg-white p-5 text-ink"
       >
         <form
           noValidate
@@ -141,11 +144,11 @@ export function CustomRangeFilter({
             apply();
           }}
         >
-          <p className="text-[13px] font-bold">Rentang tanggal laporan</p>
+          <p className="text-[13px] font-semibold">Rentang tanggal laporan</p>
           <div className="grid grid-cols-2 gap-3">
             {(["from", "to"] as const).map((key) => (
               <div key={key} className="flex flex-col gap-1.5">
-                <Label htmlFor={`${id}-${key}`} className="text-xs font-bold text-ink-muted">
+                <Label htmlFor={`${id}-${key}`} className="text-xs font-semibold text-ink">
                   {key === "from" ? "Dari tanggal" : "Sampai tanggal"}
                 </Label>
                 <Input
@@ -155,7 +158,7 @@ export function CustomRangeFilter({
                   onChange={(event) => setDraft({ ...draft, [key]: event.target.value })}
                   aria-invalid={error ? true : undefined}
                   aria-describedby={error ? `${id}-error` : undefined}
-                  className={cn(fieldControlClassName, "h-10 px-2.5 text-[13px]")}
+                  className={cn(fieldControlClassName, "h-11 px-3 text-[13px]")}
                 />
               </div>
             ))}
@@ -166,9 +169,7 @@ export function CustomRangeFilter({
             </p>
           ) : null}
           <div className="flex justify-end">
-            <ActionButton type="submit" size="sm">
-              Terapkan
-            </ActionButton>
+            <ActionButton type="submit">Terapkan</ActionButton>
           </div>
         </form>
       </PopoverContent>
@@ -193,7 +194,7 @@ export function KindFilter({
       value={value}
       options={kindOptions}
       onValueChange={(next) => onChange(next as ReportKind)}
-      className="text-ink-strong"
+      className={selectTriggerClassName}
     />
   );
 }
@@ -201,7 +202,7 @@ export function KindFilter({
 /** "● Data diperbarui 31 Okt 2026" from the latest ledger change. */
 export function UpdatedStamp({ updatedAt }: { updatedAt: string | null }) {
   return (
-    <p className="flex items-center gap-2 text-xs font-medium text-link">
+    <p className="flex items-center gap-2 text-xs font-medium text-ink-muted">
       <span aria-hidden className="size-2 rounded-full bg-current" />
       {updatedAt
         ? `Data diperbarui ${formatTableDate(todayIso(new Date(updatedAt)))}`

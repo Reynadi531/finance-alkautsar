@@ -5,7 +5,10 @@ import type { ComponentProps, ReactNode } from "react";
 export function Panel({ className, ...props }: ComponentProps<"section">) {
   return (
     <section
-      className={cn("flex flex-col rounded-xl bg-white p-5 sm:p-[22px]", className)}
+      className={cn(
+        "flex flex-col rounded-[10px] border border-line bg-white p-5 shadow-card sm:p-6",
+        className,
+      )}
       {...props}
     />
   );
@@ -24,11 +27,11 @@ export function PanelHeader({
 }) {
   return (
     <div className="flex items-start justify-between gap-4">
-      <div className="flex flex-col gap-3.5">
-        <h2 id={titleId} className="font-display text-[17px] font-bold text-ink">
+      <div className="flex flex-col gap-1.5">
+        <h2 id={titleId} className="font-display text-lg font-semibold text-ink">
           {title}
         </h2>
-        {description ? <p className="text-xs text-ink-subtle">{description}</p> : null}
+        {description ? <p className="text-xs text-ink-muted">{description}</p> : null}
       </div>
       {action}
     </div>

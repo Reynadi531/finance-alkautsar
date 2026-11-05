@@ -21,7 +21,7 @@ export function PasswordInput({ className, ...props }: Omit<ComponentProps<"inpu
         onClick={() => setVisible((value) => !value)}
         aria-label={visible ? "Sembunyikan kata sandi" : "Tampilkan kata sandi"}
         aria-pressed={visible}
-        className="absolute top-1/2 right-1.5 flex size-8 -translate-y-1/2 items-center justify-center rounded-md text-ink-muted outline-none hover:bg-canvas focus-visible:ring-2 focus-visible:ring-brand/30"
+        className="absolute top-1/2 right-1.5 flex size-8 -translate-y-1/2 items-center justify-center rounded-md text-ink-muted outline-none hover:bg-muted-surface focus-visible:ring-2 focus-visible:ring-primary-action/30"
       >
         {visible ? (
           <EyeOff className="size-4" aria-hidden />

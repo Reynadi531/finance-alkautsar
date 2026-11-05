@@ -1,4 +1,3 @@
-import { Button } from "@keuangan-alkautsar/ui/components/button";
 import { Input } from "@keuangan-alkautsar/ui/components/input";
 import {
   InputGroup,
@@ -9,14 +8,15 @@ import {
 import { Label } from "@keuangan-alkautsar/ui/components/label";
 import { useForm } from "@tanstack/react-form";
 import { useNavigate } from "@tanstack/react-router";
-import { CircleAlert, Eye, EyeOff, Loader2 } from "lucide-react";
+import { ArrowRight, CircleAlert, Eye, EyeOff } from "lucide-react";
 import { useRef, useState } from "react";
 import z from "zod";
 
+import { ActionButton } from "@/components/action-button";
 import { authClient } from "@/lib/auth-client";
 
 const inputClassName =
-  "h-[50px] rounded-lg border-[#C9D7CF] bg-white px-4 text-sm text-[#13251B] placeholder:text-[#849088] focus-visible:border-[#166B4D] focus-visible:ring-2 focus-visible:ring-[#166B4D]/20 aria-invalid:border-[#B3463B] aria-invalid:ring-[#B3463B]/20 md:text-sm dark:bg-white dark:aria-invalid:border-[#B3463B] dark:aria-invalid:ring-[#B3463B]/20";
+  "h-[52px] rounded-lg border-field bg-action px-4 text-[13px] text-ink placeholder:text-ink-subtle focus-visible:border-ink-strong focus-visible:ring-2 focus-visible:ring-ink-strong/20 aria-invalid:border-expense aria-invalid:ring-expense/20 md:text-[13px] dark:bg-action dark:aria-invalid:border-expense dark:aria-invalid:ring-expense/20";
 
 function getSignInErrorMessage(status: number) {
   // Same message for unknown email and wrong password, so account existence is not revealed.
@@ -79,14 +79,14 @@ export default function SignInForm() {
         e.stopPropagation();
         form.handleSubmit();
       }}
-      className="flex flex-col gap-4"
+      className="flex flex-col gap-5"
     >
       {authError ? (
         <div
           role="alert"
-          className="flex items-start gap-2.5 rounded-lg bg-[#FFF3F1] px-3.5 py-3 text-xs text-[#8E332E]"
+          className="flex items-start gap-2.5 rounded-lg bg-expense-surface px-3.5 py-3 text-xs text-expense-hover"
         >
-          <CircleAlert className="size-[18px] shrink-0 text-[#B3463B]" aria-hidden />
+          <CircleAlert className="size-[18px] shrink-0 text-expense" aria-hidden />
           <p className="pt-px leading-relaxed">{authError}</p>
         </div>
       ) : null}
@@ -95,8 +95,8 @@ export default function SignInForm() {
         {(field) => {
           const error = field.state.meta.errors[0]?.message;
           return (
-            <div className="flex flex-col gap-2">
-              <Label htmlFor={field.name} className="text-[13px] font-bold text-[#263D30]">
+            <div className="flex flex-col gap-[9px]">
+              <Label htmlFor={field.name} className="text-xs font-semibold text-ink">
                 Email
               </Label>
               <Input
@@ -113,7 +113,7 @@ export default function SignInForm() {
                 className={inputClassName}
               />
               {error ? (
-                <p id={`${field.name}-error`} className="text-xs text-[#B3463B]">
+                <p id={`${field.name}-error`} className="text-xs text-expense">
                   {error}
                 </p>
               ) : null}
@@ -126,11 +126,11 @@ export default function SignInForm() {
         {(field) => {
           const error = field.state.meta.errors[0]?.message;
           return (
-            <div className="flex flex-col gap-2">
-              <Label htmlFor={field.name} className="text-[13px] font-bold text-[#263D30]">
+            <div className="flex flex-col gap-[9px]">
+              <Label htmlFor={field.name} className="text-xs font-semibold text-ink">
                 Kata sandi
               </Label>
-              <InputGroup className="h-[50px] rounded-lg border-[#C9D7CF] bg-white has-[[data-slot=input-group-control]:focus-visible]:border-[#166B4D] has-[[data-slot=input-group-control]:focus-visible]:ring-2 has-[[data-slot=input-group-control]:focus-visible]:ring-[#166B4D]/20 has-[[data-slot][aria-invalid=true]]:border-[#B3463B] has-[[data-slot][aria-invalid=true]]:ring-[#B3463B]/20 dark:bg-white">
+              <InputGroup className="h-[52px] rounded-lg border-field bg-action has-[[data-slot=input-group-control]:focus-visible]:border-ink-strong has-[[data-slot=input-group-control]:focus-visible]:ring-2 has-[[data-slot=input-group-control]:focus-visible]:ring-ink-strong/20 has-[[data-slot][aria-invalid=true]]:border-expense has-[[data-slot][aria-invalid=true]]:ring-expense/20 dark:bg-action">
                 <InputGroupInput
                   id={field.name}
                   name={field.name}
@@ -143,7 +143,7 @@ export default function SignInForm() {
                   onChange={(e) => field.handleChange(e.target.value)}
                   aria-invalid={error ? true : undefined}
                   aria-describedby={error ? `${field.name}-error` : undefined}
-                  className="h-full px-4 text-sm text-[#13251B] placeholder:text-[#849088] md:text-sm"
+                  className="h-full px-4 text-[13px] text-ink placeholder:text-ink-subtle md:text-[13px]"
                 />
                 <InputGroupAddon align="inline-end" className="pr-2">
                   <InputGroupButton
@@ -151,14 +151,14 @@ export default function SignInForm() {
                     aria-label={passwordVisible ? "Sembunyikan kata sandi" : "Tampilkan kata sandi"}
                     aria-pressed={passwordVisible}
                     onClick={() => setPasswordVisible((visible) => !visible)}
-                    className="rounded-md text-[#517161]"
+                    className="rounded-md text-ink-body"
                   >
                     {passwordVisible ? <EyeOff aria-hidden /> : <Eye aria-hidden />}
                   </InputGroupButton>
                 </InputGroupAddon>
               </InputGroup>
               {error ? (
-                <p id={`${field.name}-error`} className="text-xs text-[#B3463B]">
+                <p id={`${field.name}-error`} className="text-xs text-expense">
                   {error}
                 </p>
               ) : null}
@@ -167,26 +167,27 @@ export default function SignInForm() {
         }}
       </form.Field>
 
-      <p className="text-xs text-[#517161]">Butuh bantuan masuk? Hubungi administrator masjid.</p>
+      <p className="text-[11px] leading-[19px] text-ink-lead">
+        Butuh bantuan masuk? Hubungi administrator masjid.
+      </p>
 
       <form.Subscribe selector={(state) => state.isSubmitting}>
         {(isSubmitting) => (
-          <Button
+          <ActionButton
             type="submit"
-            disabled={isSubmitting}
-            className="h-[52px] w-full rounded-lg bg-[#166B4D] text-[15px] font-bold text-white hover:bg-[#125A40] focus-visible:ring-2 focus-visible:ring-[#166B4D]/40 focus-visible:ring-offset-2"
+            tone="brand"
+            pending={isSubmitting}
+            className="h-[54px] w-full text-sm font-bold text-canvas lg:h-[52px]"
           >
             {isSubmitting ? (
-              <>
-                <Loader2 className="animate-spin" aria-hidden />
-                Memproses…
-              </>
-            ) : authError ? (
-              "Coba masuk lagi"
+              "Memproses…"
             ) : (
-              "Masuk"
+              <>
+                {authError ? "Coba masuk lagi" : "Masuk"}
+                <ArrowRight aria-hidden />
+              </>
             )}
-          </Button>
+          </ActionButton>
         )}
       </form.Subscribe>
     </form>

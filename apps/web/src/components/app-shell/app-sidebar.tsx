@@ -1,3 +1,4 @@
+import { MosqueIdentity } from "@/components/mosque-identity";
 import type { UserRole } from "@/server/mosque";
 
 import { roleLabels, visibleSections } from "./navigation";
@@ -15,33 +16,35 @@ export function AppSidebar({ user, mosqueName, role, onNavigate }: AppSidebarPro
   const sections = visibleSections(role);
 
   return (
-    <div className="flex h-full flex-col gap-2.5 bg-brand px-4 py-7">
-      <div className="flex flex-col gap-[5px] px-2.5 pb-6">
-        <p className="font-display text-xl font-bold text-white">ruangmasjid</p>
-        <p className="text-xs text-brand-muted">{mosqueName}</p>
-      </div>
-      <div className="h-px bg-white/20" />
+    <div className="flex h-full flex-col justify-between gap-7 overflow-y-auto bg-brand px-[18px] pt-8 pb-6">
+      <div className="flex flex-col gap-7">
+        <div className="flex flex-col gap-5 px-1.5">
+          <p className="font-display text-[23px] font-bold tracking-[-0.7px] text-canvas">
+            ruangmasjid
+          </p>
+          <MosqueIdentity mosqueName={mosqueName} />
+        </div>
+        <div className="h-px bg-white/[0.13]" />
 
-      <nav aria-label="Navigasi utama" className="flex flex-col gap-2.5 overflow-y-auto">
-        {sections.map((section) => (
-          <div key={section.label} className="flex flex-col pt-2.5">
-            <p className="text-[10px] font-bold tracking-[0.13em] text-brand-label uppercase">
-              {section.label}
-            </p>
-            <ul className="flex flex-col gap-1 py-3">
-              {section.items.map((item) => (
-                <li key={item.label}>
-                  <SidebarNavItem item={item} size={section.size} onNavigate={onNavigate} />
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))}
-      </nav>
-
-      <div className="mt-auto">
-        <UserProfileMenu name={user.name} email={user.email} roleLabel={roleLabels[role]} />
+        <nav aria-label="Navigasi utama" className="flex flex-col gap-[22px]">
+          {sections.map((section) => (
+            <div key={section.label} className="flex flex-col gap-1.5">
+              <p className="text-[9px] font-bold tracking-[1.4px] text-brand-label uppercase">
+                {section.label}
+              </p>
+              <ul className="flex flex-col gap-0.5">
+                {section.items.map((item) => (
+                  <li key={item.label}>
+                    <SidebarNavItem item={item} onNavigate={onNavigate} />
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </nav>
       </div>
+
+      <UserProfileMenu name={user.name} email={user.email} roleLabel={roleLabels[role]} />
     </div>
   );
 }

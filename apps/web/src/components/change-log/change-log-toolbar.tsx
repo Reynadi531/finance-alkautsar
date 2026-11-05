@@ -14,6 +14,9 @@ import { actionLabels, auditActions, auditEntities, entityLabels } from "@/lib/a
 
 const ALL = "all";
 
+const selectClassName =
+  "w-full justify-between rounded-lg border-control px-4 font-semibold text-ink data-[size=default]:h-12";
+
 const periodOptions = periods.map((value) => ({ value, label: periodLabels[value] }));
 const actionOptions = [
   { value: ALL, label: "Semua aksi" },
@@ -42,45 +45,47 @@ export function ChangeLogToolbar({
   }
 
   return (
-    <div role="search" className="flex flex-wrap items-center gap-2.5">
+    <div role="search" className="flex flex-col gap-3">
       <SearchInput
         value={filters.q ?? ""}
         onSearch={(q) => onChange({ q: q.trim() || undefined })}
         placeholder="Cari aktivitas, pengguna, atau ID..."
         aria-label="Cari aktivitas, pengguna, atau ID"
-        className="w-full sm:w-[350px]"
+        className="w-full"
       />
-      <AppSelect
-        variant="filter"
-        aria-label="Periode"
-        value={filters.period ?? DEFAULT_PERIOD}
-        options={periodOptions}
-        onValueChange={(value) =>
-          onChange({
-            period: value === DEFAULT_PERIOD ? undefined : (value as typeof filters.period),
-          })
-        }
-        className="min-w-[160px] justify-between font-normal"
-      />
-      <AppSelect
-        variant="filter"
-        aria-label="Aksi"
-        value={filters.action ?? ALL}
-        options={actionOptions}
-        onValueChange={(value) =>
-          onChange({ action: value === ALL ? undefined : (value as typeof filters.action) })
-        }
-        className="min-w-[137px] justify-between font-normal"
-      />
-      <AppSelect
-        variant="filter"
-        aria-label="Pengguna"
-        value={filters.actor ?? ALL}
-        options={actorOptions}
-        onValueChange={(value) => onChange({ actor: value === ALL ? undefined : value })}
-        className="min-w-[165px] justify-between font-normal"
-      />
-      <EntityFilter value={filters.entity} onChange={(entity) => onChange({ entity })} />
+      <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+        <AppSelect
+          variant="filter"
+          aria-label="Periode"
+          value={filters.period ?? DEFAULT_PERIOD}
+          options={periodOptions}
+          onValueChange={(value) =>
+            onChange({
+              period: value === DEFAULT_PERIOD ? undefined : (value as typeof filters.period),
+            })
+          }
+          className={cn(selectClassName, "sm:w-[212px]")}
+        />
+        <AppSelect
+          variant="filter"
+          aria-label="Aksi"
+          value={filters.action ?? ALL}
+          options={actionOptions}
+          onValueChange={(value) =>
+            onChange({ action: value === ALL ? undefined : (value as typeof filters.action) })
+          }
+          className={cn(selectClassName, "sm:w-[170px]")}
+        />
+        <AppSelect
+          variant="filter"
+          aria-label="Pengguna"
+          value={filters.actor ?? ALL}
+          options={actorOptions}
+          onValueChange={(value) => onChange({ actor: value === ALL ? undefined : value })}
+          className={cn(selectClassName, "sm:w-[198px]")}
+        />
+        <EntityFilter value={filters.entity} onChange={(entity) => onChange({ entity })} />
+      </div>
     </div>
   );
 }
@@ -97,15 +102,15 @@ function EntityFilter({
     <Popover>
       <PopoverTrigger
         className={cn(
-          "flex h-[38px] items-center gap-2 rounded-lg border border-line bg-white px-3.5 text-xs font-semibold text-ink outline-none hover:bg-canvas focus-visible:ring-2 focus-visible:ring-brand/30",
-          value && "border-brand/40 bg-info-surface text-brand",
+          "flex h-12 w-full items-center justify-center gap-3 rounded-lg border border-control bg-white px-4 text-[13px] font-semibold text-ink outline-none hover:bg-muted-surface focus-visible:ring-2 focus-visible:ring-primary-action/30 sm:w-[142px] sm:justify-start",
+          value && "border-primary-action/40 bg-action text-action-foreground",
         )}
         aria-label={value ? `Filter jenis data: ${entityLabels[value]}` : "Filter jenis data"}
       >
-        <SlidersHorizontal className="size-3.5" aria-hidden />
+        <SlidersHorizontal className="size-4" aria-hidden />
         {value ? entityLabels[value] : "Filter"}
       </PopoverTrigger>
-      <PopoverContent align="end" className="w-60 gap-1 rounded-xl bg-white p-2 text-ink">
+      <PopoverContent align="end" className="w-60 gap-1 rounded-lg bg-white p-1.5 text-ink">
         <p
           id="change-log-entity-label"
           className="px-2 pt-1 pb-1.5 text-[10px] font-bold tracking-[0.08em] text-ink-label uppercase"
@@ -123,8 +128,8 @@ function EntityFilter({
                 aria-checked={selected}
                 onClick={() => onChange(choice)}
                 className={cn(
-                  "flex items-center justify-between rounded-md px-2 py-2 text-left text-[13px] outline-none hover:bg-canvas focus-visible:ring-2 focus-visible:ring-brand/30",
-                  selected && "font-semibold text-brand",
+                  "flex items-center justify-between rounded-md px-2 py-2 text-left text-[13px] outline-none hover:bg-muted-surface focus-visible:ring-2 focus-visible:ring-primary-action/30",
+                  selected && "bg-action font-semibold text-action-foreground",
                 )}
               >
                 {choice ? entityLabels[choice] : "Semua jenis data"}

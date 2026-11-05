@@ -1,4 +1,11 @@
-import { ArrowDown, ArrowUp } from "lucide-react";
+import {
+  ArrowDown,
+  ArrowDownLeft,
+  ArrowLeftRight,
+  ArrowUp,
+  ArrowUpRight,
+  Wallet,
+} from "lucide-react";
 
 import { StatCard } from "@/components/stat-card";
 import { formatRupiah } from "@/lib/money";
@@ -45,10 +52,11 @@ export function SummaryCards({
   const periodLabel = isFullMonth ? "bulan lalu" : "periode sebelumnya";
 
   return (
-    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+    <div className="grid grid-cols-2 gap-3 lg:grid-cols-4 lg:gap-4">
       <StatCard
         label="Pemasukan"
         tone="income"
+        icon={ArrowUpRight}
         value={formatRupiah(current.income)}
         caption={
           <ComparisonCaption
@@ -61,6 +69,7 @@ export function SummaryCards({
       <StatCard
         label="Pengeluaran"
         tone="expense"
+        icon={ArrowDownLeft}
         value={formatRupiah(current.expense)}
         caption={
           <ComparisonCaption
@@ -73,10 +82,16 @@ export function SummaryCards({
       <StatCard
         label="Saldo kas"
         tone="balance"
+        icon={Wallet}
         value={formatRupiah(closingBalance)}
         caption="Saldo penutupan"
       />
-      <StatCard label="Transaksi" value={current.count} caption="Dalam periode ini" />
+      <StatCard
+        label="Transaksi"
+        icon={ArrowLeftRight}
+        value={current.count}
+        caption="Dalam periode ini"
+      />
     </div>
   );
 }

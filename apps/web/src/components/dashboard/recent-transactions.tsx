@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, ReceiptText } from "lucide-react";
 
 import { Panel, PanelHeader } from "@/components/panel";
 import { SignedAmount } from "@/components/signed-amount";
@@ -25,7 +25,7 @@ export function RecentTransactions({
   showReportLink: boolean;
 }) {
   return (
-    <Panel aria-labelledby="recent-title" className="gap-3 sm:p-5">
+    <Panel aria-labelledby="recent-title" className="gap-5">
       <PanelHeader
         titleId="recent-title"
         title="Transaksi terbaru"
@@ -33,25 +33,28 @@ export function RecentTransactions({
           showReportLink ? (
             <Link
               to="/dashboard/laporan"
-              className="flex shrink-0 items-center gap-1.5 rounded text-xs font-bold text-link outline-none hover:underline focus-visible:ring-2 focus-visible:ring-income/40"
+              className="-my-2 flex min-h-12 shrink-0 items-center gap-2 rounded text-[11px] font-semibold text-link outline-none hover:underline focus-visible:ring-2 focus-visible:ring-primary-action/40 lg:min-h-8 lg:text-xs"
             >
               Lihat semua
-              <ArrowRight className="size-3.5" aria-hidden />
+              <ArrowRight className="size-4" aria-hidden />
             </Link>
           ) : null
         }
       />
 
       {transactions.length === 0 ? (
-        <p className="py-6 text-center text-[13px] text-ink-muted">
-          Belum ada transaksi yang tercatat hingga akhir periode ini.
-        </p>
+        <div className="flex flex-col items-center justify-center gap-3 border-t border-line py-10">
+          <ReceiptText className="size-7 text-ink-subtle" aria-hidden />
+          <p className="text-center text-xs leading-5 text-ink-muted lg:text-[13px] lg:leading-[22px]">
+            Belum ada transaksi pada periode ini.
+          </p>
+        </div>
       ) : (
-        <ul className="flex flex-col">
+        <ul className="flex flex-col border-t border-line">
           {transactions.map((transaction) => (
             <li
               key={transaction.id}
-              className="flex flex-col gap-1 py-2 sm:flex-row sm:items-center sm:justify-between sm:gap-4"
+              className="flex flex-col gap-1 border-b border-line py-3.5 last:border-b-0 sm:flex-row sm:items-center sm:justify-between sm:gap-4"
             >
               <p className="flex min-w-0 flex-wrap items-center gap-x-3 text-[13px] text-ink-body">
                 <time dateTime={transaction.effectiveDate} className="whitespace-nowrap">

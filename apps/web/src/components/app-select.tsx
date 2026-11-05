@@ -56,17 +56,17 @@ export function AppSelect({
           variant === "field"
             ? cn(
                 fieldControlClassName,
-                "flex items-center justify-between gap-2 data-[size=default]:h-[42px] data-placeholder:text-ink-subtle/80",
+                "flex items-center justify-between gap-2 data-[size=default]:h-[50px] data-placeholder:text-ink-subtle",
               )
-            : "flex h-[38px] items-center data-[size=default]:h-[38px] gap-2 rounded-lg border border-line bg-white px-3.5 text-[13px] font-bold text-ink outline-none hover:bg-canvas focus-visible:ring-2 focus-visible:ring-brand/30",
+            : "flex h-12 items-center data-[size=default]:h-12 gap-3 rounded-lg border border-control bg-white px-4 text-[13px] font-semibold text-ink outline-none hover:bg-muted-surface focus-visible:ring-2 focus-visible:ring-primary-action/30",
           className,
         )}
       >
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
-      <SelectContent className="rounded-lg bg-white text-ink">
+      <SelectContent alignItemWithTrigger={false} className="text-ink">
         {options.map((option) => (
-          <SelectItem key={option.value} value={option.value} className="text-[13px]">
+          <SelectItem key={option.value} value={option.value}>
             {option.label}
           </SelectItem>
         ))}

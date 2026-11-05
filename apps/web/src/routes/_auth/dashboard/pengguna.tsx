@@ -10,6 +10,7 @@ import { ConfirmDialog } from "@/components/confirm-dialog";
 import { NoAccessPanel } from "@/components/no-access-panel";
 import { PageContainer, PageError } from "@/components/page-layout";
 import { PageHeader } from "@/components/page-header";
+import { Panel } from "@/components/panel";
 import { SearchInput } from "@/components/search-input";
 import { TablePagination } from "@/components/table-pagination";
 import {
@@ -30,6 +31,9 @@ import {
 } from "@/functions/users";
 
 const ALL = "all";
+
+const filterClassName =
+  "w-full justify-between rounded-lg border-control px-4 font-semibold text-ink data-[size=default]:h-12 sm:w-[190px]";
 
 export const Route = createFileRoute("/_auth/dashboard/pengguna")({
   validateSearch: userListSearchSchema,
@@ -103,12 +107,12 @@ function UsersScreen({ data }: { data: NonNullable<ReturnType<typeof Route.useLo
   }
 
   return (
-    <PageContainer className="gap-5">
+    <PageContainer>
       <PageHeader
         title="Pengguna"
         description="Kelola akses tim yang membantu pencatatan keuangan masjid."
         action={
-          <ActionButton tone="brand" onClick={() => setCreating(true)}>
+          <ActionButton tone="brand" onClick={() => setCreating(true)} className="w-full sm:w-auto">
             <Plus aria-hidden />
             Tambah pengguna
           </ActionButton>
@@ -117,18 +121,19 @@ function UsersScreen({ data }: { data: NonNullable<ReturnType<typeof Route.useLo
 
       <UserSummary stats={data.stats} />
 
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
         <SearchInput
           value={search.q ?? ""}
           onSearch={onSearch}
           placeholder="Cari nama atau email..."
           aria-label="Cari nama atau email pengguna"
-          className="w-full sm:max-w-[390px] [&_input]:h-[47px]"
+          className="w-full sm:flex-1"
         />
-        <div className="flex flex-wrap items-center gap-2.5">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
           <AppSelect
             variant="filter"
             aria-label="Filter peran"
+            className={filterClassName}
             value={search.role ?? ALL}
             onValueChange={(value) =>
               updateSearch({ role: value === ALL ? undefined : (value as UserListSearch["role"]) })
@@ -138,6 +143,7 @@ function UsersScreen({ data }: { data: NonNullable<ReturnType<typeof Route.useLo
           <AppSelect
             variant="filter"
             aria-label="Filter status"
+            className={filterClassName}
             value={search.status ?? ALL}
             onValueChange={(value) =>
               updateSearch({
@@ -153,7 +159,7 @@ function UsersScreen({ data }: { data: NonNullable<ReturnType<typeof Route.useLo
         </div>
       </div>
 
-      <section aria-label="Daftar pengguna" className="rounded-xl bg-white px-4 pt-5 pb-1 sm:px-5">
+      <Panel aria-label="Daftar pengguna" className="gap-5">
         <UsersTable
           users={data.users}
           currentUserId={data.currentUserId}
@@ -161,14 +167,14 @@ function UsersScreen({ data }: { data: NonNullable<ReturnType<typeof Route.useLo
           onAction={(action, user) => setDialog({ action, user })}
         />
         <TablePagination
-          className="border-t border-line px-2 pb-3"
+          className="border-t border-line"
           page={page}
           pageSize={USERS_PAGE_SIZE}
           total={data.total}
           noun="pengguna"
           onPageChange={(next) => updateSearch({ page: next > 1 ? next : undefined })}
         />
-      </section>
+      </Panel>
 
       <RoleGuide />
 
@@ -208,13 +214,13 @@ function UsersSkeleton() {
     <PageContainer aria-busy="true" aria-label="Memuat daftar pengguna">
       <Skeleton className="h-9 w-48 rounded-lg bg-white" />
       <Skeleton className="h-5 w-96 max-w-full rounded-lg bg-white" />
-      <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-3">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         {Array.from({ length: 3 }, (_, index) => (
-          <Skeleton key={index} className="h-[79px] rounded-[10px] bg-white" />
+          <Skeleton key={index} className="h-[111px] rounded-[10px] bg-white" />
         ))}
       </div>
-      <Skeleton className="h-[47px] w-full max-w-[390px] rounded-lg bg-white" />
-      <Skeleton className="h-[420px] rounded-xl bg-white" />
+      <Skeleton className="h-12 w-full rounded-lg bg-white" />
+      <Skeleton className="h-[420px] rounded-[10px] bg-white" />
     </PageContainer>
   );
 }

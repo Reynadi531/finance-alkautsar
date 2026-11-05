@@ -107,15 +107,16 @@ export function LoginBackgroundPanel({
   }
 
   const pickButton = (label: string) => (
-    <button
-      type="button"
+    <ActionButton
+      tone="outline"
       onClick={() => inputRef.current?.click()}
       disabled={saving || removing}
       aria-describedby={hintId}
-      className="rounded-md px-2 py-1.5 text-[13px] font-bold whitespace-nowrap text-link outline-none hover:bg-action-hover focus-visible:ring-2 focus-visible:ring-income/40 disabled:opacity-60"
+      className="w-full sm:w-[184px]"
     >
+      <ImageIcon aria-hidden />
       {label}
-    </button>
+    </ActionButton>
   );
 
   const shown = picked
@@ -129,9 +130,9 @@ export function LoginBackgroundPanel({
       : null;
 
   return (
-    <Panel aria-labelledby="login-background-title" className="gap-2.5 p-5">
+    <Panel aria-labelledby="login-background-title" className="gap-5 p-6">
       <PanelHeader title="Latar halaman masuk" titleId="login-background-title" />
-      <p id={hintId} className="text-xs text-ink-muted">
+      <p id={hintId} className="-mt-3 text-xs leading-[22px] text-ink-muted">
         JPG, PNG, atau WebP · maksimum 5 MB. Ukuran yang disarankan 1920 × 1080 piksel.
       </p>
 
@@ -148,8 +149,8 @@ export function LoginBackgroundPanel({
       />
 
       {shown ? (
-        <div className="flex flex-col gap-3 rounded-[7px] border border-field p-3 sm:flex-row sm:items-center">
-          <div className="aspect-video w-full shrink-0 overflow-hidden rounded-md bg-canvas sm:w-40">
+        <div className="flex flex-col gap-4 rounded-lg border border-field p-4 sm:flex-row sm:items-center">
+          <div className="aspect-video w-full shrink-0 overflow-hidden rounded-md bg-muted-surface sm:w-40">
             {shown.src ? (
               <img
                 src={shown.src}
@@ -159,25 +160,20 @@ export function LoginBackgroundPanel({
             ) : null}
           </div>
           <div className="flex min-w-0 flex-1 flex-col gap-1">
-            <p className="truncate text-[13px] font-bold text-ink" title={shown.name}>
+            <p className="truncate text-[13px] font-semibold text-ink" title={shown.name}>
               {shown.name}
             </p>
             <p className="text-xs text-ink-muted">
               {formatSize(shown.size)} · {picked ? "Belum disimpan" : "Sedang digunakan"}
             </p>
           </div>
-          <div className="flex flex-wrap items-center gap-2">
+          <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
             {picked ? (
               <>
-                <ActionButton
-                  tone="outline"
-                  size="sm"
-                  onClick={() => setPicked(null)}
-                  disabled={saving}
-                >
+                <ActionButton tone="outline" onClick={() => setPicked(null)} disabled={saving}>
                   Batal
                 </ActionButton>
-                <ActionButton tone="income" size="sm" onClick={save} pending={saving}>
+                <ActionButton tone="brand" onClick={save} pending={saving}>
                   Simpan gambar
                 </ActionButton>
               </>
@@ -186,7 +182,6 @@ export function LoginBackgroundPanel({
                 {pickButton("Ganti gambar")}
                 <ActionButton
                   tone="ghost"
-                  size="sm"
                   className="text-expense hover:bg-expense-surface"
                   onClick={() => setConfirmRemove(true)}
                 >
@@ -197,11 +192,8 @@ export function LoginBackgroundPanel({
           </div>
         </div>
       ) : (
-        <div className="flex min-h-14 items-center justify-between gap-3 rounded-[7px] border border-field px-4 py-2">
-          <span className="flex items-center gap-2 text-[13px] text-ink-muted">
-            <ImageIcon className="size-4 shrink-0" aria-hidden />
-            Belum ada gambar dipilih
-          </span>
+        <div className="flex flex-col gap-4 rounded-lg border border-field p-4 sm:flex-row sm:items-center">
+          <span className="flex-1 text-[13px] text-ink-muted">Belum ada gambar dipilih</span>
           {pickButton("Pilih gambar")}
         </div>
       )}

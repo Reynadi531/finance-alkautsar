@@ -8,23 +8,23 @@
 
 :root {
   --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
+  --foreground: #183d35;
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
+  --card-foreground: #183d35;
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.58 0.22 27);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
+  --popover-foreground: #183d35;
+  --primary: #184c40;
+  --primary-foreground: #ffffff;
+  --secondary: #f3f5ef;
+  --secondary-foreground: #184c40;
+  --muted: #f3f5ef;
+  --muted-foreground: #718075;
+  --accent: #edf2e9;
+  --accent-foreground: #184c40;
+  --destructive: #b14e45;
+  --border: #e3e8de;
+  --input: #d4ddd1;
+  --ring: #184c40;
   --chart-1: oklch(0.809 0.105 251.813);
   --chart-2: oklch(0.623 0.214 259.815);
   --chart-3: oklch(0.546 0.245 262.881);
@@ -76,8 +76,8 @@
 }
 
 @theme inline {
-  --font-sans: "Inter Variable", "Inter", sans-serif;
-  --font-display: "Manrope", "Inter", sans-serif;
+  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "Geist Mono", ui-monospace, monospace;
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
@@ -119,40 +119,49 @@
   --radius-4xl: calc(var(--radius) + 16px);
 }
 
-/* ruangmasjid app palette (Pencil design S01). Income green, expense red, balance blue. */
+/* ruangmasjid app palette (Pencil "Final Design" V1). Deep mosque green, warm paper canvas. */
 @theme {
-  --color-brand: #003c91;
-  --color-brand-raised: #174f9b;
-  --color-brand-tint: #c9ddf3;
-  --color-brand-foreground: #dce8f7;
-  --color-brand-muted: #c7d8ee;
-  --color-brand-label: #afc5e5;
-  --color-canvas: #f5f7f6;
-  --color-ink: #17241d;
-  --color-ink-strong: #36453d;
-  --color-ink-body: #435149;
-  --color-ink-muted: #69766f;
-  --color-ink-subtle: #758078;
-  --color-ink-label: #77837c;
-  --color-line: #e6ebe8;
-  --color-field: #c9d7cf;
-  --color-income: #16704f;
-  --color-expense: #b44d48;
-  --color-balance: #325e9b;
-  --color-count: #42534a;
-  --color-action: #f5f8f6;
-  --color-action-hover: #e9f1ec;
-  --color-action-foreground: #245941;
-  --color-link: #26714f;
-  --color-chart-income: #1f8a5b;
-  --color-chart-expense: #ec9184;
-  --color-income-surface: #edf6f1;
-  --color-expense-surface: #fbefee;
-  --color-info-surface: #edf3fb;
-  --color-info-foreground: #2c5487;
-  --color-brand-hover: #00327a;
-  --color-income-hover: #125a40;
-  --color-expense-hover: #9a3f3a;
+  --color-brand: #123b32;
+  --color-brand-raised: rgb(255 255 255 / 5%);
+  --color-brand-tint: #edf2e9;
+  --color-brand-foreground: #dde8df;
+  --color-brand-muted: #bcd0c2;
+  --color-brand-label: #a9c3b6;
+  --color-brand-icon: #b4cabc;
+  --color-brand-hover: #0d2f28;
+  --color-canvas: #f8f7f2;
+  --color-ink: #183d35;
+  --color-ink-strong: #184c40;
+  --color-ink-body: #526d5d;
+  --color-ink-muted: #718075;
+  --color-ink-subtle: #87948b;
+  --color-ink-label: #62796c;
+  --color-ink-lead: #6a7c70;
+  --color-line: #e3e8de;
+  --color-field: #d4ddd1;
+  --color-control: #dde4d7;
+  --color-muted-surface: #f3f5ef;
+  --color-empty-surface: #f8f9f5;
+  --color-income: #22714f;
+  --color-expense: #b14e45;
+  --color-balance: #123b32;
+  --color-count: #183d35;
+  --color-primary-action: #184c40;
+  --color-primary-action-hover: #123b32;
+  --color-action: #edf2e9;
+  --color-action-hover: #dde8df;
+  --color-action-foreground: #184c40;
+  --color-link: #184c40;
+  --color-chart-income: #22714f;
+  --color-chart-expense: #d9897f;
+  --color-income-surface: #edf2e9;
+  --color-expense-surface: #f8ecea;
+  --color-info-surface: #edf2e9;
+  --color-info-foreground: #526d5d;
+  --color-info-icon: #54705c;
+  --color-income-hover: #1a5a3e;
+  --color-expense-hover: #973f37;
+  --shadow-card: 0 2px 8px rgb(18 59 50 / 2.4%);
 }
 
 @layer base {

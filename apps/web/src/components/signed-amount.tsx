@@ -15,7 +15,7 @@ export function SignedAmount({
   return (
     <span
       className={cn(
-        "font-mono text-[13px] font-bold whitespace-nowrap tabular-nums",
+        "text-[13px] font-semibold whitespace-nowrap tabular-nums",
         kind === "income" ? "text-income" : "text-expense",
         className,
       )}

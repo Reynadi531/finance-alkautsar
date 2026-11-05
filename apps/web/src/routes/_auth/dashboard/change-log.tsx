@@ -16,6 +16,7 @@ import {
 } from "@/components/change-log/filters";
 import { PageContainer, PageError } from "@/components/page-layout";
 import { PageHeader } from "@/components/page-header";
+import { Panel } from "@/components/panel";
 import { TablePagination } from "@/components/table-pagination";
 import { getChangeLog, type ChangeLogEntry } from "@/functions/change-log";
 
@@ -78,9 +79,9 @@ function ChangeLogPage() {
 
       <ChangeLogStats {...data.stats} />
 
-      <section aria-labelledby="change-log-list-title" className="flex flex-col gap-[15px]">
+      <Panel aria-labelledby="change-log-list-title" className="gap-5">
         <div className="flex flex-wrap items-center justify-between gap-2">
-          <h2 id="change-log-list-title" className="font-display text-base font-bold text-ink">
+          <h2 id="change-log-list-title" className="font-display text-lg font-semibold text-ink">
             {filtered ? "Hasil aktivitas" : "Aktivitas terbaru"}
           </h2>
           <p className="text-[11px] text-ink-muted">
@@ -118,7 +119,7 @@ function ChangeLogPage() {
 
         {data.total > 0 ? (
           <TablePagination
-            className="pt-0"
+            className="border-t border-line"
             page={Math.min(page, pageCount)}
             pageSize={CHANGE_LOG_PAGE_SIZE}
             total={data.total}
@@ -128,9 +129,9 @@ function ChangeLogPage() {
             }
           />
         ) : null}
-      </section>
+      </Panel>
 
-      <p className="text-[11px] text-ink-muted">
+      <p className="text-xs leading-[22px] text-ink-muted">
         Setiap perubahan tercatat otomatis untuk menjaga transparansi dan akuntabilitas.
       </p>
 
@@ -145,13 +146,13 @@ function ChangeLogSkeleton() {
       <Skeleton className="h-3 w-56 rounded bg-white" />
       <Skeleton className="h-9 w-72 max-w-full rounded-lg bg-white" />
       <Skeleton className="h-4 w-96 max-w-full rounded bg-white" />
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         {Array.from({ length: 3 }, (_, index) => (
-          <Skeleton key={index} className="h-[91px] rounded-lg bg-white" />
+          <Skeleton key={index} className="h-[111px] rounded-[10px] bg-white" />
         ))}
       </div>
-      <Skeleton className="h-[38px] w-full rounded-lg bg-white" />
-      <Skeleton className="h-[434px] w-full rounded-[9px] bg-white" />
+      <Skeleton className="h-12 w-full rounded-lg bg-white" />
+      <Skeleton className="h-[434px] w-full rounded-[10px] bg-white" />
     </PageContainer>
   );
 }

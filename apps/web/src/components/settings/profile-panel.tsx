@@ -1,3 +1,4 @@
+import { cn } from "@keuangan-alkautsar/ui/lib/utils";
 import { useForm } from "@tanstack/react-form";
 import { useRouter } from "@tanstack/react-router";
 import { useRef, useState } from "react";
@@ -11,6 +12,7 @@ import {
   FormField,
   invalidProps,
 } from "@/components/form-field";
+import { MosqueLogo } from "@/components/mosque-identity";
 import { Panel, PanelHeader } from "@/components/panel";
 import type { MosqueSettings } from "@/functions/settings";
 import { saveMosqueProfile } from "@/functions/settings";
@@ -93,12 +95,19 @@ export function ProfilePanel({ settings }: { settings: MosqueSettings }) {
   });
 
   return (
-    <Panel aria-labelledby="profile-title" className="gap-3 p-5">
+    <Panel aria-labelledby="profile-title" className="gap-5 p-6">
       <PanelHeader title="Profil masjid" titleId="profile-title" />
+      <div className="flex items-center gap-[18px]">
+        <MosqueLogo className="size-20 rounded-lg border border-line p-2.5" />
+        <div className="flex min-w-0 flex-1 flex-col gap-1.5">
+          <p className="text-sm leading-[22px] font-semibold text-ink">{settings.name}</p>
+          <p className="text-[11px] text-ink-muted">Pratinjau logo masjid</p>
+        </div>
+      </div>
       <form
         ref={formRef}
         noValidate
-        className="flex flex-col gap-3"
+        className="flex flex-col gap-5"
         onSubmit={(event) => {
           event.preventDefault();
           event.stopPropagation();
@@ -116,12 +125,12 @@ export function ProfilePanel({ settings }: { settings: MosqueSettings }) {
                   label={config.label}
                   required={config.required}
                   error={error}
-                  className="gap-2 [&_label]:text-xs [&_label]:text-ink-strong"
+                  className="gap-2.5 [&_label]:text-xs [&_label]:font-semibold [&_label]:text-ink"
                 >
                   <input
                     id={id}
                     type={config.name === "phone" ? "tel" : "text"}
-                    className={fieldControlClassName}
+                    className={cn(fieldControlClassName, "h-[52px] px-3.5 text-[13px]")}
                     autoComplete={config.autoComplete}
                     placeholder={config.placeholder}
                     value={field.state.value}
@@ -145,10 +154,10 @@ export function ProfilePanel({ settings }: { settings: MosqueSettings }) {
         <form.Subscribe selector={(state) => state.isSubmitting}>
           {(submitting) => (
             <ActionButton
-              tone="income"
+              tone="brand"
               type="submit"
               pending={submitting}
-              className="h-10 self-start px-[18px]"
+              className="w-full sm:w-auto sm:min-w-[219px] sm:self-start"
             >
               Simpan pengaturan
             </ActionButton>

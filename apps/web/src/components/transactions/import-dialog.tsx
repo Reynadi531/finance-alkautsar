@@ -82,13 +82,13 @@ export function ImportDialog({
           <ActionButton tone="outline" onClick={() => onOpenChange(false)} disabled={pending}>
             Batal
           </ActionButton>
-          <ActionButton tone={kind} onClick={submit} pending={pending}>
+          <ActionButton tone="brand" onClick={submit} pending={pending}>
             Impor transaksi
           </ActionButton>
         </AppDialogFooter>
       }
     >
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-5">
         <InfoNote>
           <p>
             Kolom: <strong>tanggal</strong> (YYYY-MM-DD atau DD/MM/YYYY), <strong>kode_tipe</strong>{" "}
@@ -104,7 +104,7 @@ export function ImportDialog({
           <a
             href={`/api/transaksi/template?kind=${kind}`}
             download
-            className="mt-2 inline-flex items-center gap-1.5 rounded font-bold underline-offset-2 outline-none hover:underline focus-visible:ring-2 focus-visible:ring-brand/30"
+            className="mt-2 inline-flex items-center gap-1.5 rounded font-semibold text-link underline-offset-2 outline-none hover:underline focus-visible:ring-2 focus-visible:ring-primary-action/30"
           >
             <Download className="size-3.5" aria-hidden />
             Unduh templat CSV

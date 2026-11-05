@@ -1,6 +1,6 @@
 import { Skeleton } from "@keuangan-alkautsar/ui/components/skeleton";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight, Clock3 } from "lucide-react";
+import { ArrowRight, History } from "lucide-react";
 
 import { NoAccessPanel } from "@/components/no-access-panel";
 import { PageContainer, PageError } from "@/components/page-layout";
@@ -23,43 +23,37 @@ function SettingsPage() {
   if (!settings) return <NoAccessPanel title="Pengaturan masjid" />;
 
   return (
-    <PageContainer className="gap-[18px] lg:px-[54px] lg:py-8">
-      <div className="flex w-full max-w-[850px] flex-col gap-[18px]">
-        <PageHeader
-          title="Pengaturan masjid"
-          description={`Kelola identitas dan preferensi ${settings.name}.`}
-        />
-        <ProfilePanel settings={settings} />
-        <LoginBackgroundPanel background={settings.loginBackground} />
-        <PublicReportPanel enabled={settings.publicReportEnabled} />
-        <Link
-          to="/dashboard/change-log"
-          search={{ entity: "mosque" }}
-          className="inline-flex items-center gap-1.5 self-start rounded-md text-[13px] font-bold text-link outline-none hover:underline focus-visible:ring-2 focus-visible:ring-income/40"
-        >
-          <Clock3 className="size-3.5" aria-hidden />
-          Lihat riwayat perubahan pengaturan
-          <ArrowRight className="size-3.5" aria-hidden />
-        </Link>
-      </div>
+    <PageContainer>
+      <PageHeader
+        title="Pengaturan masjid"
+        description={`Kelola identitas dan preferensi ${settings.name}.`}
+      />
+      <ProfilePanel settings={settings} />
+      <LoginBackgroundPanel background={settings.loginBackground} />
+      <PublicReportPanel enabled={settings.publicReportEnabled} />
+      <Link
+        to="/dashboard/change-log"
+        search={{ entity: "mosque" }}
+        className="inline-flex items-center gap-1.5 self-start rounded-md text-[13px] font-semibold text-link outline-none hover:underline focus-visible:ring-2 focus-visible:ring-primary-action/40"
+      >
+        <History className="size-4" aria-hidden />
+        Lihat riwayat perubahan pengaturan
+        <ArrowRight className="size-4" aria-hidden />
+      </Link>
     </PageContainer>
   );
 }
 
 function SettingsSkeleton() {
   return (
-    <PageContainer
-      aria-busy="true"
-      aria-label="Memuat pengaturan masjid"
-      className="lg:px-[54px] lg:py-8"
-    >
-      <div className="flex w-full max-w-[850px] flex-col gap-[18px]">
+    <PageContainer aria-busy="true" aria-label="Memuat pengaturan masjid">
+      <div className="flex flex-col gap-3">
         <Skeleton className="h-9 w-64 rounded-lg bg-white" />
         <Skeleton className="h-5 w-80 max-w-full rounded-lg bg-white" />
-        <Skeleton className="h-[357px] rounded-xl bg-white" />
-        <Skeleton className="h-[156px] rounded-xl bg-white" />
-        <Skeleton className="h-[165px] rounded-xl bg-white" />
       </div>
+      <Skeleton className="h-[520px] rounded-[10px] bg-white" />
+      <Skeleton className="h-[200px] rounded-[10px] bg-white" />
+      <Skeleton className="h-[180px] rounded-[10px] bg-white" />
     </PageContainer>
   );
 }

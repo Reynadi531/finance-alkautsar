@@ -38,7 +38,7 @@ export function TablePagination({
   const last = Math.min(total, page * pageSize);
 
   const control =
-    "flex size-[30px] items-center justify-center rounded-md border border-line bg-white text-xs font-bold text-ink-body outline-none hover:bg-canvas focus-visible:ring-2 focus-visible:ring-brand/30 disabled:pointer-events-none disabled:opacity-40";
+    "flex size-8 items-center justify-center rounded-md border border-control bg-white text-[11px] font-semibold text-ink outline-none hover:bg-muted-surface focus-visible:ring-2 focus-visible:ring-primary-action/30 disabled:pointer-events-none disabled:opacity-40";
 
   return (
     <div
@@ -47,7 +47,7 @@ export function TablePagination({
         className,
       )}
     >
-      <p className="text-xs text-ink-muted" aria-live="polite">
+      <p className="text-[11px] text-ink-muted" aria-live="polite">
         Menampilkan {first}–{last} dari {total} {noun}
       </p>
       {pageCount > 1 ? (
@@ -72,7 +72,8 @@ export function TablePagination({
                 type="button"
                 className={cn(
                   control,
-                  item === page && "border-brand bg-brand text-white hover:bg-brand",
+                  item === page &&
+                    "border-primary-action bg-primary-action text-white hover:bg-primary-action",
                 )}
                 onClick={() => onPageChange(item)}
                 aria-current={item === page ? "page" : undefined}

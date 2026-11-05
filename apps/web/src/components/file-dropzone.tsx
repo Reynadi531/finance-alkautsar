@@ -58,11 +58,11 @@ export function FileDropzone({
   const shownName = file?.name ?? existingName;
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-2.5">
       {shownName ? (
-        <div className="flex items-center gap-3 rounded-lg border border-line bg-canvas px-3.5 py-3">
+        <div className="flex items-center gap-3 rounded-lg border border-control bg-muted-surface px-3.5 py-3">
           <FileText className="size-4 shrink-0 text-ink-muted" aria-hidden />
-          <span className="min-w-0 flex-1 truncate text-[13px] font-bold text-ink">
+          <span className="min-w-0 flex-1 truncate text-[13px] font-semibold text-ink">
             {shownName}
           </span>
           <button
@@ -75,7 +75,7 @@ export function FileDropzone({
                 onRemoveExisting?.();
               }
             }}
-            className="flex size-7 items-center justify-center rounded-md text-ink-muted outline-none hover:bg-line focus-visible:ring-2 focus-visible:ring-brand/30"
+            className="flex size-7 items-center justify-center rounded-md text-ink-muted outline-none hover:bg-line focus-visible:ring-2 focus-visible:ring-primary-action/30"
             aria-label={`Hapus berkas ${shownName}`}
           >
             <X className="size-3.5" aria-hidden />
@@ -91,13 +91,13 @@ export function FileDropzone({
           onDragLeave={() => setDragging(false)}
           onDrop={onDrop}
           className={cn(
-            "flex cursor-pointer flex-col items-center gap-1.5 rounded-lg border border-field bg-canvas px-4 py-5 text-center outline-none transition-colors hover:bg-action-hover has-focus-visible:ring-2 has-focus-visible:ring-brand/30",
-            dragging && "border-brand bg-info-surface",
+            "flex min-h-[112px] cursor-pointer flex-col items-center justify-center gap-2.5 rounded-lg border border-control bg-muted-surface p-4 text-center outline-none transition-colors hover:bg-action has-focus-visible:ring-2 has-focus-visible:ring-primary-action/30",
+            dragging && "border-primary-action bg-info-surface",
             shownError && "border-expense",
           )}
         >
-          <span className="flex items-center gap-1.5 text-[13px] font-bold text-link">
-            <Upload className="size-3.5" aria-hidden />
+          <Upload className="size-5 text-ink-strong" aria-hidden />
+          <span className="text-[13px] font-semibold text-ink-strong">
             Pilih berkas atau tarik ke sini
           </span>
           <span className="text-[11px] text-ink-muted">{hint}</span>

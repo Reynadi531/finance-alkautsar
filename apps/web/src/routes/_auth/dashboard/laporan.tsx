@@ -82,19 +82,23 @@ function CashReportPage() {
         title="Laporan kas"
         description="Pantau arus dana dan unduh laporan keuangan masjid."
         action={
-          <ActionButton onClick={() => setExportOpen(true)} className="px-[15px]">
+          <ActionButton
+            tone="brand"
+            onClick={() => setExportOpen(true)}
+            className="w-full sm:w-auto sm:min-w-[168px]"
+          >
             <FileDown aria-hidden />
             Ekspor laporan
           </ActionButton>
         }
       />
 
-      <div className="-mt-1 flex flex-col gap-3">
-        <div className="flex flex-wrap items-center justify-between gap-3">
+      <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
           <div
             role="group"
             aria-label="Filter laporan"
-            className="flex flex-wrap items-center gap-2.5"
+            className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center"
           >
             <MonthFilter range={query} bounds={report.meta} onChange={setRange} />
             <CustomRangeFilter range={query} onChange={setRange} />
@@ -152,7 +156,7 @@ function CashReportPage() {
         }
       />
 
-      <InfoNote className="items-center gap-3 px-[18px] py-3.5 text-xs [&>svg]:size-[18px]">
+      <InfoNote className="items-start gap-3 border border-line p-4 text-xs leading-5 [&>svg]:size-[18px]">
         Saldo akhir dihitung dari saldo awal ditambah pemasukan, dikurangi pengeluaran. Laporan ini
         hanya mencakup transaksi yang tercatat.
       </InfoNote>
@@ -182,21 +186,22 @@ function CashReportPage() {
 function CashReportSkeleton() {
   return (
     <PageContainer aria-busy="true" aria-label="Memuat laporan kas">
-      <div className="flex items-center justify-between gap-4">
+      <div className="flex flex-col gap-3">
         <Skeleton className="h-9 w-48 rounded-lg bg-white" />
-        <Skeleton className="h-[38px] w-36 rounded-lg bg-white" />
+        <Skeleton className="h-5 w-80 max-w-full rounded-lg bg-white" />
+        <Skeleton className="h-12 w-full rounded-lg bg-white sm:w-[168px]" />
       </div>
-      <Skeleton className="h-5 w-80 max-w-full rounded-lg bg-white" />
-      <div className="flex gap-2.5">
-        <Skeleton className="h-[38px] w-32 rounded-lg bg-white" />
-        <Skeleton className="h-[38px] w-36 rounded-lg bg-white" />
+      <div className="flex flex-col gap-3 sm:flex-row">
+        <Skeleton className="h-12 w-full rounded-lg bg-white sm:w-[154px]" />
+        <Skeleton className="h-12 w-full rounded-lg bg-white sm:w-[161px]" />
+        <Skeleton className="h-12 w-full rounded-lg bg-white sm:w-[175px]" />
       </div>
-      <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-4">
         {Array.from({ length: 4 }, (_, index) => (
-          <Skeleton key={index} className="h-[118px] rounded-xl bg-white" />
+          <Skeleton key={index} className="h-[124px] rounded-[10px] bg-white" />
         ))}
       </div>
-      <Skeleton className="h-[472px] rounded-xl bg-white" />
+      <Skeleton className="h-[472px] rounded-[10px] bg-white" />
     </PageContainer>
   );
 }

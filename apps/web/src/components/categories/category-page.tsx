@@ -1,7 +1,15 @@
 import { Skeleton } from "@keuangan-alkautsar/ui/components/skeleton";
 import { cn } from "@keuangan-alkautsar/ui/lib/utils";
 import { Link } from "@tanstack/react-router";
-import { ArrowRight, ArrowUpRight, Plus, Rows3, ShieldAlert } from "lucide-react";
+import {
+  Archive,
+  ArrowLeftRight,
+  ArrowRight,
+  ArrowUpRight,
+  Plus,
+  ShieldAlert,
+  Tags,
+} from "lucide-react";
 import { useCallback, useState } from "react";
 
 import { ActionButton, actionButtonVariants } from "@/components/action-button";
@@ -79,42 +87,50 @@ export function CategoryPage({
   const selectedId = dialog.open ? dialog.category?.id : undefined;
 
   return (
-    <PageContainer className="gap-[23px]">
+    <PageContainer>
       <PageHeader
         breadcrumbs={breadcrumbs(kind)}
         title={config.title}
         description={config.description}
         action={
-          <ActionButton tone="brand" onClick={() => openDialog(null)}>
+          <ActionButton tone="brand" onClick={() => openDialog(null)} className="w-full sm:w-auto">
             <Plus aria-hidden />
             Tambah tipe
           </ActionButton>
         }
       />
 
-      <LinkTabs items={tabs} label="Jenis tipe transaksi" className="-mt-1" />
+      <LinkTabs items={tabs} label="Jenis tipe transaksi" />
 
-      <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-3">
-        <StatCard label="Tipe aktif" value={stats.active} caption={config.activeCaption} />
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+        <StatCard
+          label="Tipe aktif"
+          value={stats.active}
+          caption={config.activeCaption}
+          icon={Tags}
+        />
         <StatCard
           label={config.usedLabel}
           value={stats.usedThisMonth}
           caption={config.usedCaption(stats.transactionsThisMonth)}
+          icon={ArrowLeftRight}
         />
-        <StatCard label="Tipe diarsipkan" value={stats.archived} caption={config.archivedCaption} />
+        <StatCard
+          label="Tipe diarsipkan"
+          value={stats.archived}
+          caption={config.archivedCaption}
+          icon={Archive}
+        />
       </div>
 
-      <Panel aria-labelledby="category-list-title" className="px-0 py-5 sm:px-0 sm:py-5">
-        <div className="flex flex-wrap items-center justify-between gap-3 px-5">
-          <div className="flex flex-col gap-[5px]">
-            <h2 id="category-list-title" className="font-display text-[17px] font-bold text-ink">
-              Daftar tipe {config.noun}
-            </h2>
-            <p className="text-xs text-ink-muted">
-              {stats.active} aktif
-              {stats.archived > 0 ? ` · ${stats.archived} diarsipkan` : ""} · urut berdasarkan nama
-            </p>
-          </div>
+      <Panel aria-labelledby="category-list-title" className="gap-5">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <h2
+            id="category-list-title"
+            className="font-display text-lg font-semibold text-ink sm:min-w-0 sm:flex-1"
+          >
+            Daftar tipe {config.noun}
+          </h2>
           <AppSelect
             variant="filter"
             aria-label="Filter status tipe"
@@ -126,30 +142,29 @@ export function CategoryPage({
                 status: value === DEFAULT_CATEGORY_STATUS ? undefined : (value as CategoryStatus),
               })
             }
-            className="text-brand"
+            className="w-full justify-between rounded-lg border-control px-4 font-semibold text-ink data-[size=default]:h-12 sm:w-auto sm:min-w-[105px]"
           />
         </div>
+        <p className="-mt-2 text-xs text-ink-muted">
+          {stats.active} aktif
+          {stats.archived > 0 ? ` · ${stats.archived} diarsipkan` : ""} · urut berdasarkan nama
+        </p>
 
         {hasAny ? (
           <>
-            <div className="px-5 py-[17px]">
-              <SearchInput
-                value={query}
-                onSearch={handleSearch}
-                placeholder={config.searchPlaceholder}
-                aria-label={`Cari tipe ${config.noun}`}
-                className="[&_input]:bg-[#fafbfb]"
-              />
-            </div>
+            <SearchInput
+              value={query}
+              onSearch={handleSearch}
+              placeholder={config.searchPlaceholder}
+              aria-label={`Cari tipe ${config.noun}`}
+            />
 
             <DataTable className="min-w-[560px]" aria-label={`Daftar tipe ${config.noun}`}>
               <thead>
                 <tr>
-                  <Th className="rounded-none pl-5 first:rounded-none">Nama tipe / kode</Th>
+                  <Th className="pl-4">Nama tipe / kode</Th>
                   <Th className="w-[34%]">Dipakai</Th>
-                  <Th className="w-[110px] rounded-none pr-5 text-right last:rounded-none">
-                    Tindakan
-                  </Th>
+                  <Th className="w-[110px] pr-4 text-right">Tindakan</Th>
                 </tr>
               </thead>
               <tbody>
@@ -182,7 +197,7 @@ export function CategoryPage({
               </tbody>
             </DataTable>
 
-            <div className="flex flex-col gap-2 border-t border-line px-5 pt-[15px] sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex flex-col gap-2 border-t border-line pt-4 sm:flex-row sm:items-center sm:justify-between">
               <p className="text-xs text-ink-muted" aria-live="polite">
                 Menampilkan {data.items.length} dari {data.statusTotal} {statusNoun[status]}
               </p>
@@ -190,7 +205,7 @@ export function CategoryPage({
                 <Link
                   to={config.to}
                   search={{ status: "archived" }}
-                  className="inline-flex items-center gap-1.5 self-start rounded-sm text-xs font-bold text-brand outline-none hover:underline focus-visible:ring-2 focus-visible:ring-brand/30"
+                  className="inline-flex items-center gap-1.5 self-start rounded-sm text-xs font-semibold text-link outline-none hover:underline focus-visible:ring-2 focus-visible:ring-primary-action/30"
                 >
                   Lihat {stats.archived} tipe diarsipkan
                   <ArrowRight className="size-3.5" aria-hidden />
@@ -199,7 +214,7 @@ export function CategoryPage({
                 <Link
                   to={config.to}
                   search={{}}
-                  className="inline-flex items-center gap-1.5 self-start rounded-sm text-xs font-bold text-brand outline-none hover:underline focus-visible:ring-2 focus-visible:ring-brand/30"
+                  className="inline-flex items-center gap-1.5 self-start rounded-sm text-xs font-semibold text-link outline-none hover:underline focus-visible:ring-2 focus-visible:ring-primary-action/30"
                 >
                   Lihat {stats.active} tipe aktif
                   <ArrowRight className="size-3.5" aria-hidden />
@@ -239,12 +254,12 @@ function CategoryRow({
 }) {
   return (
     <Tr className={cn(selected && "bg-info-surface")}>
-      <Td className="py-[15px] pl-5">
+      <Td className="py-[15px] pl-4">
         <div className="flex flex-col gap-1">
           <span
             className={cn(
               "text-[13px] leading-4 font-bold",
-              selected ? "text-brand" : item.archived ? "text-ink-muted" : "text-ink",
+              selected ? "text-ink-strong" : item.archived ? "text-ink-muted" : "text-ink",
             )}
           >
             {item.name}
@@ -259,12 +274,12 @@ function CategoryRow({
         </div>
       </Td>
       <Td className="text-xs text-ink-muted">{item.transactionCount} transaksi</Td>
-      <Td className="pr-5 text-right">
+      <Td className="pr-4 text-right">
         <button
           type="button"
           onClick={onEdit}
           aria-label={`Ubah ${item.name}`}
-          className="inline-flex items-center gap-1.5 rounded-sm text-xs font-bold text-brand outline-none hover:underline focus-visible:ring-2 focus-visible:ring-brand/30"
+          className="inline-flex items-center gap-1.5 rounded-sm text-xs font-semibold text-link outline-none hover:underline focus-visible:ring-2 focus-visible:ring-primary-action/30"
         >
           {selected ? "Dipilih" : "Ubah"}
           <ArrowUpRight className="size-3.5" aria-hidden />
@@ -307,16 +322,14 @@ function EmptyState({
   onAdd: () => void;
 }) {
   return (
-    <div className="mx-5 mt-[17px] flex flex-col items-center gap-3 rounded-lg border border-dashed border-line px-6 py-12 text-center">
-      <span className="flex size-11 items-center justify-center rounded-full bg-info-surface text-brand">
-        <Rows3 className="size-5" aria-hidden />
-      </span>
-      <h3 className="font-display text-base font-bold text-ink">Belum ada tipe {noun}</h3>
-      <p className="max-w-md text-[13px] text-ink-muted">
+    <div className="flex min-h-[280px] flex-col items-center justify-center gap-4 rounded-lg bg-empty-surface p-6 text-center">
+      <Tags className="size-8 text-ink-subtle" aria-hidden />
+      <h3 className="font-display text-[17px] font-semibold text-ink">Belum ada tipe {noun}</h3>
+      <p className="max-w-md text-xs leading-[22px] text-ink-muted">
         Tambahkan minimal satu tipe {noun} sebelum mencatat {transactionLabel}. Tipe membantu
         laporan kas tetap rapi dan mudah ditelusuri.
       </p>
-      <ActionButton tone="brand" onClick={onAdd}>
+      <ActionButton tone="brand" onClick={onAdd} className="w-full sm:w-auto">
         <Plus aria-hidden />
         Tambah tipe
       </ActionButton>
@@ -335,12 +348,12 @@ export function CategoryPageSkeleton({ kind }: { kind: CategoryKind }) {
       <Skeleton className="h-9 w-64 rounded-lg bg-white" />
       <Skeleton className="h-5 w-[520px] max-w-full rounded-lg bg-white" />
       <Skeleton className="h-7 w-52 rounded-lg bg-white" />
-      <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-3">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         {Array.from({ length: 3 }, (_, index) => (
-          <Skeleton key={index} className="h-[111px] rounded-xl bg-white" />
+          <Skeleton key={index} className="h-[111px] rounded-[10px] bg-white" />
         ))}
       </div>
-      <Skeleton className="h-[420px] rounded-xl bg-white" />
+      <Skeleton className="h-[420px] rounded-[10px] bg-white" />
     </PageContainer>
   );
 }
@@ -350,11 +363,14 @@ export function CategoryNoAccess({ kind }: { kind: CategoryKind }) {
   return (
     <PageContainer>
       <PageHeader breadcrumbs={breadcrumbs(kind)} title={categoryKinds[kind].title} />
-      <div role="alert" className="flex flex-col items-start gap-3 rounded-xl bg-white p-6">
+      <div
+        role="alert"
+        className="flex flex-col items-start gap-3 rounded-[10px] border border-line bg-white p-6 shadow-card"
+      >
         <span className="flex size-10 items-center justify-center rounded-full bg-expense-surface text-expense">
           <ShieldAlert className="size-5" aria-hidden />
         </span>
-        <h2 className="font-display text-lg font-bold text-ink">Tidak ada akses</h2>
+        <h2 className="font-display text-lg font-semibold text-ink">Tidak ada akses</h2>
         <p className="text-sm text-ink-muted">
           Hanya administrator yang dapat mengelola tipe transaksi. Tipe yang aktif tetap bisa Anda
           pilih saat mencatat transaksi.

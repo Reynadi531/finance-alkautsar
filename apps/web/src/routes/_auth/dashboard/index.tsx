@@ -1,5 +1,5 @@
 import { Skeleton } from "@keuangan-alkautsar/ui/components/skeleton";
-import { createFileRoute, useRouter } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import z from "zod";
 
 import { CashflowChart } from "@/components/dashboard/cashflow-chart";
@@ -7,7 +7,8 @@ import { QuickActions } from "@/components/dashboard/quick-actions";
 import { RecentTransactions } from "@/components/dashboard/recent-transactions";
 import { SummaryCards } from "@/components/dashboard/summary-cards";
 import { DateRangePicker } from "@/components/date-range-picker";
-import { PageHeader } from "@/components/page-header";
+import { InfoNote } from "@/components/info-note";
+import { PageContainer, PageError } from "@/components/page-layout";
 import { getDashboardOverview } from "@/functions/dashboard";
 import { currentMonthRange, isFullMonth, isoDateSchema, type DateRange } from "@/lib/date-range";
 
@@ -50,17 +51,21 @@ function DashboardPage() {
   const isThisMonth = overview.range.from === thisMonth.from && overview.range.to === thisMonth.to;
 
   return (
-    <div className="flex flex-col gap-6 px-4 py-6 sm:px-8 lg:px-11 lg:py-[38px]">
-      <PageHeader
-        title="Ringkasan keuangan"
-        description={`Assalamu’alaikum, ${firstName(shell.user.name)}. Berikut kondisi kas ${overview.mosqueName} ${isThisMonth ? "bulan ini" : "pada periode ini"}.`}
-        action={
+    <PageContainer className="gap-5 px-5 pt-7 pb-8 sm:px-6 lg:gap-[22px] lg:p-8">
+      <header className="grid grid-cols-1 items-center gap-x-4 gap-y-3.5 lg:grid-cols-[minmax(0,1fr)_auto] lg:gap-y-3">
+        <h1 className="font-display text-[25px] font-semibold tracking-[-0.8px] text-ink lg:text-[28px] lg:tracking-[-0.9px]">
+          Ringkasan keuangan
+        </h1>
+        <p className="text-[13px] leading-[23px] text-ink-lead lg:col-span-2 lg:row-start-2 lg:leading-[22px]">
+          {`Assalamu’alaikum, ${firstName(shell.user.name)}. Berikut kondisi kas ${overview.mosqueName} ${isThisMonth ? "bulan ini" : "pada periode ini"}.`}
+        </p>
+        <div className="lg:col-start-2 lg:row-start-1">
           <DateRangePicker
             value={overview.range}
             onChange={(range) => navigate({ search: range })}
           />
-        }
-      />
+        </div>
+      </header>
 
       <SummaryCards
         current={overview.current}
@@ -70,13 +75,13 @@ function DashboardPage() {
       />
 
       {overview.current.count === 0 ? (
-        <p className="-mt-2 rounded-lg bg-white px-4 py-3 text-[13px] text-ink-muted">
+        <InfoNote className="border border-[#dbe4d5] p-4">
           Tidak ada transaksi pada periode ini. Saldo kas tetap menghitung semua transaksi sebelum
           tanggal akhir.
-        </p>
+        </InfoNote>
       ) : null}
 
-      <div className="grid grid-cols-1 items-start gap-[18px] lg:grid-cols-[minmax(0,690fr)_minmax(0,404fr)]">
+      <div className="grid grid-cols-1 items-stretch gap-5 lg:grid-cols-[minmax(0,1fr)_340px]">
         <CashflowChart data={overview.monthly} />
         <QuickActions role={overview.role} />
       </div>
@@ -85,49 +90,37 @@ function DashboardPage() {
         transactions={overview.recent}
         showReportLink={overview.role !== "viewer"}
       />
-    </div>
+    </PageContainer>
   );
 }
 
 function DashboardSkeleton() {
   return (
-    <div
-      className="flex flex-col gap-6 px-4 py-6 sm:px-8 lg:px-11 lg:py-[38px]"
+    <PageContainer
+      className="gap-5 px-5 pt-7 pb-8 sm:px-6 lg:gap-[22px] lg:p-8"
       aria-busy="true"
       aria-label="Memuat ringkasan keuangan"
     >
-      <Skeleton className="h-9 w-64 rounded-lg bg-white" />
-      <Skeleton className="h-5 w-96 max-w-full rounded-lg bg-white" />
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <Skeleton className="h-9 w-64 rounded-lg bg-muted-surface" />
+      <Skeleton className="h-5 w-96 max-w-full rounded-lg bg-muted-surface" />
+      <div className="grid grid-cols-2 gap-3 lg:grid-cols-4 lg:gap-4">
         {Array.from({ length: 4 }, (_, index) => (
-          <Skeleton key={index} className="h-[119px] rounded-xl bg-white" />
+          <Skeleton key={index} className="h-[119px] rounded-[10px] bg-muted-surface" />
         ))}
       </div>
-      <div className="grid grid-cols-1 gap-[18px] lg:grid-cols-[690fr_404fr]">
-        <Skeleton className="h-[330px] rounded-xl bg-white" />
-        <Skeleton className="h-[303px] rounded-xl bg-white" />
+      <div className="grid grid-cols-1 gap-5 lg:grid-cols-[minmax(0,1fr)_340px]">
+        <Skeleton className="h-[330px] rounded-[10px] bg-muted-surface" />
+        <Skeleton className="h-[303px] rounded-[10px] bg-muted-surface" />
       </div>
-    </div>
+    </PageContainer>
   );
 }
 
 function DashboardError() {
-  const router = useRouter();
   return (
-    <div className="px-4 py-6 sm:px-8 lg:px-11 lg:py-[38px]">
-      <div role="alert" className="flex flex-col items-start gap-3 rounded-xl bg-white p-6">
-        <h1 className="font-display text-xl font-bold text-ink">Ringkasan gagal dimuat</h1>
-        <p className="text-sm text-ink-muted">
-          Data keuangan tidak dapat diambil. Periksa koneksi Anda, lalu coba lagi.
-        </p>
-        <button
-          type="button"
-          onClick={() => router.invalidate()}
-          className="rounded-lg bg-income px-4 py-2 text-[13px] font-bold text-white hover:bg-income/90"
-        >
-          Coba lagi
-        </button>
-      </div>
-    </div>
+    <PageError
+      title="Ringkasan gagal dimuat"
+      message="Data keuangan tidak dapat diambil. Periksa koneksi Anda, lalu coba lagi."
+    />
   );
 }

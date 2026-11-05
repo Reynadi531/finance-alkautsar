@@ -4,9 +4,12 @@ import type { ReactNode } from "react";
 
 /** Shared look for text inputs, textareas and select triggers inside app forms. */
 export const fieldControlClassName =
-  "h-[42px] w-full rounded-lg border border-field bg-white px-3 text-sm text-ink placeholder:text-ink-subtle/80 outline-none transition-colors focus-visible:border-brand focus-visible:ring-2 focus-visible:ring-brand/20 aria-invalid:border-expense aria-invalid:ring-expense/15 disabled:cursor-not-allowed disabled:bg-canvas";
+  "h-[50px] w-full rounded-lg border border-field bg-white px-3.5 text-[13px] leading-[21px] text-ink placeholder:text-ink-subtle outline-none transition-colors focus-visible:border-primary-action focus-visible:ring-2 focus-visible:ring-primary-action/20 aria-invalid:border-expense aria-invalid:ring-expense/15 disabled:cursor-not-allowed disabled:bg-muted-surface";
 
-export const textareaControlClassName = cn(fieldControlClassName, "h-auto min-h-[76px] py-2.5");
+export const textareaControlClassName = cn(
+  fieldControlClassName,
+  "h-[100px] min-h-[100px] resize-y py-3.5",
+);
 
 /**
  * Label + control + inline error. Pass the control as children and give it the same `id`
@@ -30,8 +33,8 @@ export function FormField({
   children: ReactNode;
 }) {
   return (
-    <div className={cn("flex min-w-0 flex-col gap-2", className)}>
-      <Label htmlFor={id} className="text-[13px] font-bold text-ink">
+    <div className={cn("flex min-w-0 flex-col gap-[9px]", className)}>
+      <Label htmlFor={id} className="text-xs font-semibold text-ink">
         {label}
         {required ? <span aria-hidden> *</span> : null}
       </Label>
@@ -41,7 +44,7 @@ export function FormField({
           {error}
         </p>
       ) : hint ? (
-        <p className="text-[11px] text-ink-muted">{hint}</p>
+        <p className="text-[11px] leading-[19px] text-ink-muted">{hint}</p>
       ) : null}
     </div>
   );

@@ -5,7 +5,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@keuangan-alkautsar/ui/components/dropdown-menu";
-import { KeyRound, MoreHorizontal, Pencil, UserCheck, UserX } from "lucide-react";
+import { Ellipsis, KeyRound, Pencil, UserCheck, UserX } from "lucide-react";
+import type { ReactNode } from "react";
 
 import { DataTable, TableMessage, Td, Th, Tr } from "@/components/data-table";
 import {
@@ -32,62 +33,123 @@ export function UsersTable({
   filtered: boolean;
   onAction: (action: UserAction, user: UserRow) => void;
 }) {
+  const emptyMessage = filtered
+    ? "Tidak ada pengguna yang cocok dengan pencarian atau filter."
+    : "Belum ada pengguna. Tambahkan anggota tim untuk mulai berbagi akses.";
+
   return (
-    <DataTable className="min-w-[860px]">
-      <caption className="sr-only">Daftar pengguna</caption>
-      <thead>
-        <tr>
-          <Th className="w-[25%] pl-2">Pengguna</Th>
-          <Th className="w-[23%]">Email</Th>
-          <Th className="w-[15%]">Peran</Th>
-          <Th className="w-[12%]">Status</Th>
-          <Th className="w-[15%]">Terakhir aktif</Th>
-          <Th className="w-[10%]">Aksi</Th>
-        </tr>
-      </thead>
-      <tbody>
+    <>
+      <div className="hidden md:block">
+        <DataTable className="min-w-[860px]">
+          <caption className="sr-only">Daftar pengguna</caption>
+          <thead>
+            <tr>
+              <Th className="w-[25%] pl-4">Pengguna</Th>
+              <Th className="w-[23%]">Email</Th>
+              <Th className="w-[15%]">Peran</Th>
+              <Th className="w-[12%]">Status</Th>
+              <Th className="w-[15%]">Terakhir aktif</Th>
+              <Th className="w-[10%]">Aksi</Th>
+            </tr>
+          </thead>
+          <tbody>
+            {users.length === 0 ? (
+              <TableMessage colSpan={COLUMNS}>{emptyMessage}</TableMessage>
+            ) : (
+              users.map((row) => (
+                <Tr key={row.id}>
+                  <Td className="py-4 pl-4">
+                    <div className="flex items-center gap-[11px]">
+                      <UserAvatar id={row.id} name={row.name} />
+                      <span className="min-w-0 truncate text-xs font-semibold text-ink">
+                        {row.name}
+                        {row.id === currentUserId ? (
+                          <span className="ml-1.5 font-normal text-ink-muted">(Anda)</span>
+                        ) : null}
+                      </span>
+                    </div>
+                  </Td>
+                  <Td className="text-xs break-all text-ink">{row.email}</Td>
+                  <Td>
+                    <RoleBadge role={row.role} />
+                  </Td>
+                  <Td>
+                    <UserStatusBadge active={row.active} />
+                  </Td>
+                  <Td className="text-xs whitespace-nowrap text-ink">
+                    {formatLastActive(row.lastActiveAt)}
+                  </Td>
+                  <Td>
+                    <RowActions
+                      user={row}
+                      isSelf={row.id === currentUserId}
+                      onAction={(action) => onAction(action, row)}
+                    />
+                  </Td>
+                </Tr>
+              ))
+            )}
+          </tbody>
+        </DataTable>
+      </div>
+
+      <ul aria-label="Daftar pengguna" className="flex flex-col md:hidden">
         {users.length === 0 ? (
-          <TableMessage colSpan={COLUMNS}>
-            {filtered
-              ? "Tidak ada pengguna yang cocok dengan pencarian atau filter."
-              : "Belum ada pengguna. Tambahkan anggota tim untuk mulai berbagi akses."}
-          </TableMessage>
+          <li className="py-12 text-center text-[13px] leading-[23px] text-ink-muted">
+            {emptyMessage}
+          </li>
         ) : (
           users.map((row) => (
-            <Tr key={row.id}>
-              <Td className="py-[17px] pl-2">
-                <div className="flex items-center gap-[11px]">
+            <li
+              key={row.id}
+              className="flex flex-col gap-4 border-b border-line py-4 first:pt-0 last:border-b-0"
+            >
+              <div className="flex items-center justify-between gap-4">
+                <div className="flex min-w-0 items-center gap-[11px]">
                   <UserAvatar id={row.id} name={row.name} />
-                  <span className="min-w-0 truncate text-xs font-bold text-ink">
+                  <span className="min-w-0 truncate text-[13px] font-semibold text-ink">
                     {row.name}
                     {row.id === currentUserId ? (
                       <span className="ml-1.5 font-normal text-ink-muted">(Anda)</span>
                     ) : null}
                   </span>
                 </div>
-              </Td>
-              <Td className="text-xs break-all text-ink-body">{row.email}</Td>
-              <Td>
-                <RoleBadge role={row.role} />
-              </Td>
-              <Td>
-                <UserStatusBadge active={row.active} />
-              </Td>
-              <Td className="text-[11px] whitespace-nowrap text-ink-muted">
-                {formatLastActive(row.lastActiveAt)}
-              </Td>
-              <Td>
                 <RowActions
                   user={row}
                   isSelf={row.id === currentUserId}
                   onAction={(action) => onAction(action, row)}
                 />
-              </Td>
-            </Tr>
+              </div>
+              <dl className="flex flex-col gap-4">
+                <MobileField label="Email">
+                  <span className="text-[13px] leading-[22px] break-all text-ink">{row.email}</span>
+                </MobileField>
+                <MobileField label="Peran">
+                  <RoleBadge role={row.role} />
+                </MobileField>
+                <MobileField label="Status">
+                  <UserStatusBadge active={row.active} />
+                </MobileField>
+                <MobileField label="Terakhir aktif">
+                  <span className="text-[13px] leading-[22px] text-ink">
+                    {formatLastActive(row.lastActiveAt)}
+                  </span>
+                </MobileField>
+              </dl>
+            </li>
           ))
         )}
-      </tbody>
-    </DataTable>
+      </ul>
+    </>
+  );
+}
+
+function MobileField({ label, children }: { label: string; children: ReactNode }) {
+  return (
+    <div className="flex flex-col items-start gap-1.5">
+      <dt className="text-[10px] text-ink-muted">{label}</dt>
+      <dd>{children}</dd>
+    </div>
   );
 }
 
@@ -105,9 +167,9 @@ function RowActions({
     <DropdownMenu>
       <DropdownMenuTrigger
         aria-label={`Aksi untuk ${user.name}`}
-        className="flex h-8 w-10 items-center justify-center rounded-md text-ink-body outline-none hover:bg-canvas focus-visible:ring-2 focus-visible:ring-brand/30 data-popup-open:bg-canvas"
+        className="flex size-10 items-center justify-center rounded-lg text-ink outline-none hover:bg-muted-surface focus-visible:ring-2 focus-visible:ring-primary-action/30 data-popup-open:bg-muted-surface"
       >
-        <MoreHorizontal className="size-5" strokeWidth={2.5} aria-hidden />
+        <Ellipsis className="size-5" aria-hidden />
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-56 rounded-lg bg-white p-1 text-ink">
         <DropdownMenuItem className={itemClassName} onClick={() => onAction("edit")}>

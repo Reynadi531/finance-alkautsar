@@ -1,5 +1,5 @@
 import { useServerFn } from "@tanstack/react-start";
-import { ArrowDown } from "lucide-react";
+import { FileDown } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -40,8 +40,13 @@ export function ExportButton({
   }
 
   return (
-    <ActionButton tone="outline" pending={pending} onClick={handleExport}>
-      {pending ? null : <ArrowDown aria-hidden />}
+    <ActionButton
+      tone="outline"
+      pending={pending}
+      onClick={handleExport}
+      className="w-full sm:w-auto"
+    >
+      {pending ? null : <FileDown aria-hidden />}
       {filtered ? "Ekspor hasil filter" : "Ekspor CSV"}
     </ActionButton>
   );

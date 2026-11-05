@@ -141,7 +141,7 @@ export function TransactionFormDialog({
           </ActionButton>
           <form.Subscribe selector={(state) => state.isSubmitting}>
             {(isSubmitting) => (
-              <ActionButton type="submit" form={formId} tone={kind} pending={isSubmitting}>
+              <ActionButton type="submit" form={formId} tone="brand" pending={isSubmitting}>
                 {row ? "Simpan perubahan" : `Simpan ${copy.noun}`}
               </ActionButton>
             )}
@@ -158,19 +158,19 @@ export function TransactionFormDialog({
           event.stopPropagation();
           void form.handleSubmit();
         }}
-        className="flex flex-col gap-4"
+        className="flex flex-col gap-5"
       >
         {formError ? (
           <div
             role="alert"
-            className="flex items-start gap-2.5 rounded-lg bg-expense-surface px-3.5 py-3 text-xs text-expense"
+            className="flex items-start gap-2.5 rounded-lg bg-expense-surface px-3.5 py-3 text-xs leading-5 text-expense"
           >
             <CircleAlert className="size-4 shrink-0" aria-hidden />
             <p className="pt-px">{formError}</p>
           </div>
         ) : null}
 
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
           <form.Field name="effectiveDate">
             {(field) => {
               const id = `${formId}-date`;
@@ -307,7 +307,7 @@ export function TransactionFormDialog({
           }}
         </form.Field>
 
-        <FormField id={`${formId}-proof`} label={copy.proofLabel}>
+        <FormField id={`${formId}-proof`} label={copy.proofLabel} className="gap-2.5">
           <FileDropzone
             id={`${formId}-proof`}
             accept={proofAccept}

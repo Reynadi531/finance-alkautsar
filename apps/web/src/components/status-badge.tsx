@@ -2,10 +2,10 @@ import { cn } from "@keuangan-alkautsar/ui/lib/utils";
 import type { ReactNode } from "react";
 
 const toneClassName = {
-  brand: "bg-info-surface text-brand",
+  brand: "bg-info-surface text-ink-strong",
   income: "bg-income-surface text-income",
   expense: "bg-expense-surface text-expense",
-  neutral: "bg-canvas text-ink-muted",
+  neutral: "bg-muted-surface text-ink-muted",
 } as const;
 
 export type BadgeTone = keyof typeof toneClassName;

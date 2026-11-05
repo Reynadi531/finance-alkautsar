@@ -35,7 +35,7 @@ export function ActiveFilterBanner({
   onReset: () => void;
 }) {
   return (
-    <div className="flex flex-col gap-2 rounded-[7px] bg-info-surface px-[15px] py-3.5 text-brand sm:flex-row sm:items-center sm:justify-between">
+    <div className="flex flex-col gap-2 rounded-lg border border-line bg-info-surface px-4 py-3.5 text-action-foreground sm:flex-row sm:items-center sm:justify-between">
       <p className="flex items-start gap-2.5 text-xs font-semibold" aria-live="polite">
         <CircleDot className="mt-px size-3.5 shrink-0" aria-hidden />
         <span>Filter aktif · {describeFilters(filters, total, actorName)}</span>
@@ -43,7 +43,7 @@ export function ActiveFilterBanner({
       <button
         type="button"
         onClick={onReset}
-        className="flex shrink-0 items-center gap-1.5 self-start rounded text-[11px] font-semibold outline-none hover:underline focus-visible:ring-2 focus-visible:ring-brand/30 sm:self-auto"
+        className="flex shrink-0 items-center gap-1.5 self-start rounded text-[11px] font-semibold outline-none hover:underline focus-visible:ring-2 focus-visible:ring-primary-action/30 sm:self-auto"
       >
         Atur ulang filter
         <X className="size-3" aria-hidden />

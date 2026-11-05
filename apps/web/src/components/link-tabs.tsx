@@ -18,13 +18,16 @@ export function LinkTabs({
   className?: string;
 }) {
   return (
-    <nav aria-label={label} className={cn("flex items-end gap-5", className)}>
+    <nav
+      aria-label={label}
+      className={cn("flex items-end gap-6 border-b border-control", className)}
+    >
       {items.map((item) => (
         <Link
           key={item.to}
           to={item.to}
           activeOptions={{ exact: true, includeSearch: false }}
-          className="-mb-px border-b-2 border-transparent px-0.5 pb-2.5 text-sm text-ink-muted outline-none hover:text-ink focus-visible:rounded-sm focus-visible:ring-2 focus-visible:ring-brand/30 data-[status=active]:border-brand data-[status=active]:font-bold data-[status=active]:text-brand"
+          className="-mb-px flex-1 border-b-2 border-canvas py-3 text-center text-sm text-ink-muted outline-none hover:text-ink focus-visible:rounded-sm focus-visible:ring-2 focus-visible:ring-primary-action/30 sm:px-1 sm:text-left data-[status=active]:border-primary-action data-[status=active]:font-semibold data-[status=active]:text-ink-strong"
         >
           {item.label}
         </Link>

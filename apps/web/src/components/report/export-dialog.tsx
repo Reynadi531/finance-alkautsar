@@ -49,7 +49,7 @@ const formats: { value: ReportFormat; label: string; detail: string; icon: typeo
 ];
 
 function SectionLegend({ children }: { children: ReactNode }) {
-  return <legend className="mb-3 text-[13px] font-bold text-ink-strong">{children}</legend>;
+  return <legend className="mb-3 text-xs font-semibold text-ink">{children}</legend>;
 }
 
 /**
@@ -172,7 +172,7 @@ export function ExportDialog({
   const eyebrow = validRange ? reportTitle(mosqueName, { from, to }) : mosqueName;
   const dateInputClassName = cn(
     fieldControlClassName,
-    "h-[42px] rounded-[7px] border-line text-xs [&::-webkit-calendar-picker-indicator]:opacity-0",
+    "h-12 rounded-lg px-3.5 text-[13px] [&::-webkit-calendar-picker-indicator]:opacity-0",
   );
 
   return (
@@ -194,20 +194,10 @@ export function ExportDialog({
             </span>
           }
         >
-          <ActionButton
-            tone="outline"
-            className="h-[37px] rounded-[7px] px-[15px] text-xs"
-            onClick={() => onOpenChange(false)}
-            disabled={pending}
-          >
+          <ActionButton tone="outline" onClick={() => onOpenChange(false)} disabled={pending}>
             Batal
           </ActionButton>
-          <ActionButton
-            type="submit"
-            form={`${id}-form`}
-            className="h-[37px] rounded-[7px] px-[15px] text-xs"
-            pending={pending}
-          >
+          <ActionButton type="submit" tone="brand" form={`${id}-form`} pending={pending}>
             {pending ? "Menyiapkan…" : "Unduh laporan"}
           </ActionButton>
         </AppDialogFooter>
@@ -222,7 +212,7 @@ export function ExportDialog({
           void submit();
         }}
       >
-        <p className="text-[11px] font-bold tracking-[0.04em] whitespace-pre-wrap text-ink-body uppercase">
+        <p className="text-[11px] font-semibold tracking-[0.04em] whitespace-pre-wrap text-ink-label uppercase">
           {eyebrow.replace(" · ", "  ·  ")}
         </p>
 
@@ -236,10 +226,10 @@ export function ExportDialog({
                 <label
                   key={option.value}
                   className={cn(
-                    "flex cursor-pointer flex-col gap-[7px] rounded-lg border bg-white p-3 transition-colors has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-income/30",
+                    "flex cursor-pointer flex-col gap-2 rounded-lg border bg-white p-3 transition-colors has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-primary-action/30",
                     checked
-                      ? "border-2 border-income bg-income-surface p-[11px]"
-                      : "border-line hover:bg-canvas",
+                      ? "border-2 border-primary-action bg-action p-[11px]"
+                      : "border-line hover:bg-muted-surface",
                   )}
                 >
                   <input
@@ -251,11 +241,11 @@ export function ExportDialog({
                     className="sr-only"
                   />
                   <Icon
-                    className={cn("size-[18px]", checked ? "text-income" : "text-ink-muted")}
+                    className={cn("size-[18px]", checked ? "text-ink-strong" : "text-ink-muted")}
                     aria-hidden
                   />
-                  <span className="text-[13px] font-bold text-ink">{option.label}</span>
-                  <span className="text-[10px] text-ink-muted">{option.detail}</span>
+                  <span className="text-[13px] font-semibold text-ink">{option.label}</span>
+                  <span className="text-[11px] text-ink-muted">{option.detail}</span>
                 </label>
               );
             })}
@@ -274,7 +264,7 @@ export function ExportDialog({
               <FormField
                 key={key}
                 id={`${id}-${key}`}
-                label={<span className="text-[11px] text-ink-muted">{label}</span>}
+                label={<span className="text-xs font-semibold text-ink">{label}</span>}
                 className="gap-1.5"
               >
                 <div className="relative">
@@ -316,10 +306,10 @@ export function ExportDialog({
                 <label
                   key={value}
                   className={cn(
-                    "flex cursor-pointer items-center gap-[7px] rounded-[7px] border px-2.5 py-2 text-[11px] transition-colors has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-income/30",
+                    "flex cursor-pointer items-center gap-2 rounded-lg border px-3 py-2.5 text-xs transition-colors has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-primary-action/30",
                     checked
-                      ? "border-income bg-income-surface font-bold text-income"
-                      : "border-line bg-white text-ink-body hover:bg-canvas",
+                      ? "border-primary-action bg-action font-semibold text-ink-strong"
+                      : "border-field bg-white text-ink-body hover:bg-muted-surface",
                   )}
                 >
                   <input
@@ -350,12 +340,12 @@ export function ExportDialog({
             type="checkbox"
             checked={running}
             onChange={(event) => setRunning(event.target.checked)}
-            className="size-[17px] cursor-pointer rounded-[3px] accent-income"
+            className="size-[17px] cursor-pointer rounded-[3px] accent-primary-action"
           />
           Sertakan saldo awal periode dan saldo berjalan
         </label>
 
-        <InfoNote icon={false} className="rounded-[7px] p-3 text-[11px]">
+        <InfoNote icon={false} className="rounded-lg p-3 text-xs">
           Ekspor menggunakan baris dan perhitungan yang sama dengan laporan di layar.
         </InfoNote>
 

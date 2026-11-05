@@ -1,8 +1,17 @@
 import { cn } from "@keuangan-alkautsar/ui/lib/utils";
 import { Link } from "@tanstack/react-router";
-import { ArrowDown, ArrowDownRight, ArrowRight, ArrowUp, ArrowUpRight } from "lucide-react";
-import type { ReactNode } from "react";
+import {
+  ArrowDown,
+  ArrowDownLeft,
+  ArrowDownRight,
+  ArrowRight,
+  ArrowUp,
+  ArrowUpRight,
+  ReceiptText,
+  Wallet,
+} from "lucide-react";
 
+import { StatCard } from "@/components/stat-card";
 import { formatRupiah } from "@/lib/money";
 
 import {
@@ -21,38 +30,6 @@ const percentFormat = new Intl.NumberFormat("id-ID", {
   signDisplay: "exceptZero",
 });
 
-function SummaryCard({
-  label,
-  badge,
-  value,
-  valueClassName,
-  caption,
-}: {
-  label: string;
-  badge?: ReactNode;
-  value: ReactNode;
-  valueClassName?: string;
-  caption: ReactNode;
-}) {
-  return (
-    <div className="flex min-w-0 flex-col gap-3 rounded-xl border border-line bg-white p-5">
-      <div className="flex min-h-[23px] items-center justify-between gap-3">
-        <p className="text-[11px] font-bold tracking-[0.08em] text-ink-label uppercase">{label}</p>
-        {badge}
-      </div>
-      <p
-        className={cn(
-          "truncate font-display text-[23px] font-bold text-ink tabular-nums",
-          valueClassName,
-        )}
-      >
-        {value}
-      </p>
-      <div className="text-xs text-ink-muted">{caption}</div>
-    </div>
-  );
-}
-
 function ChangeBadge({
   kind,
   current,
@@ -68,7 +45,7 @@ function ChangeBadge({
   return (
     <span
       className={cn(
-        "inline-flex shrink-0 items-center gap-1 rounded-full px-2.5 py-[5px] text-[11px] font-bold tabular-nums",
+        "inline-flex shrink-0 items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-semibold tabular-nums",
         kind === "income" ? "bg-income-surface text-income" : "bg-expense-surface text-expense",
       )}
     >
@@ -127,21 +104,29 @@ export function TransactionSummary({
         ? "bulan ini"
         : `pada ${formatMonth(month)}`;
 
+  const totalCaption = `Dari ${current.count} transaksi tercatat ${scope}`;
+
   return (
-    <div className="grid grid-cols-1 gap-4 md:grid-cols-[minmax(0,420fr)_minmax(0,330fr)_minmax(0,330fr)]">
-      <SummaryCard
+    <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+      <StatCard
         label={`${copy.totalLabel} · ${periodLabel}`}
-        badge={
-          previous ? (
-            <ChangeBadge kind={kind} current={current.total} previous={previous.total} />
-          ) : null
-        }
+        icon={kind === "income" ? ArrowUpRight : ArrowDownLeft}
+        tone={kind === "income" ? "neutral" : "expense"}
         value={formatRupiah(current.total)}
-        valueClassName={cn("text-[27px]", kind === "income" ? "text-income" : "text-expense")}
-        caption={`Dari ${current.count} transaksi tercatat ${scope}`}
+        caption={
+          previous && previous.total > 0 ? (
+            <span className="flex flex-wrap items-center gap-x-2 gap-y-1">
+              <ChangeBadge kind={kind} current={current.total} previous={previous.total} />
+              <span>{totalCaption}</span>
+            </span>
+          ) : (
+            totalCaption
+          )
+        }
       />
-      <SummaryCard
+      <StatCard
         label="Transaksi tercatat"
+        icon={ReceiptText}
         value={current.count}
         caption={
           previous && previousMonth ? (
@@ -155,8 +140,9 @@ export function TransactionSummary({
           )
         }
       />
-      <SummaryCard
+      <StatCard
         label="Rata-rata per transaksi"
+        icon={Wallet}
         value={formatRupiah(average)}
         caption="Dalam periode terpilih"
       />
@@ -180,18 +166,16 @@ export function TransactionInsight({
 }) {
   if (!topCategory) return null;
   const copy = kindCopy[kind];
-  const tone = kind === "income" ? "text-income" : "text-expense";
   return (
     <section
       aria-label="Wawasan singkat"
-      className={cn(
-        "flex flex-col gap-3 rounded-[10px] px-5 py-4 sm:min-h-[88px] sm:flex-row sm:items-center sm:justify-between",
-        kind === "income" ? "bg-income-surface" : "bg-expense-surface",
-      )}
+      className="flex flex-col gap-3 rounded-lg border border-[#DBE4D5] bg-info-surface p-4 sm:flex-row sm:items-center sm:justify-between"
     >
-      <div className="flex min-w-0 flex-col gap-1.5">
-        <p className={cn("text-[13px] font-bold", tone)}>{copy.insightTitle(topCategory.name)}</p>
-        <p className="text-xs text-ink-muted">
+      <div className="flex min-w-0 flex-col gap-1">
+        <p className="text-[13px] font-semibold text-ink-strong">
+          {copy.insightTitle(topCategory.name)}
+        </p>
+        <p className="text-xs leading-5 text-info-foreground">
           {copy.insightVerb} {formatRupiah(topCategory.amount)} atau{" "}
           {shareFormat.format(topCategory.share)} dari {copy.noun} {scopeLabel}.
         </p>
@@ -199,10 +183,7 @@ export function TransactionInsight({
       {showCategoryLink ? (
         <Link
           to={copy.categoryRoute}
-          className={cn(
-            "inline-flex shrink-0 items-center gap-1.5 rounded text-xs font-bold outline-none hover:underline focus-visible:ring-2 focus-visible:ring-brand/30",
-            tone,
-          )}
+          className="inline-flex shrink-0 items-center gap-1.5 rounded text-xs font-semibold text-link outline-none hover:underline focus-visible:ring-2 focus-visible:ring-primary-action/30"
         >
           {copy.categoryLinkLabel}
           <ArrowRight className="size-3.5" aria-hidden />

@@ -1,6 +1,8 @@
 import { cn } from "@keuangan-alkautsar/ui/lib/utils";
+import { ChartNoAxesCombined } from "lucide-react";
 import { useState } from "react";
 
+import { DataTable, Td, Th, Tr } from "@/components/data-table";
 import { Panel, PanelHeader } from "@/components/panel";
 import { formatMonthShort, formatMonthSpan } from "@/lib/date-range";
 import { formatRupiah } from "@/lib/money";
@@ -29,7 +31,7 @@ export function CashflowChart({ data }: { data: MonthlyFlow[] }) {
   const span = data.length ? formatMonthSpan(data[0].month, data[data.length - 1].month) : "";
 
   return (
-    <Panel aria-labelledby="cashflow-title" className="gap-3.5 lg:min-h-[330px]">
+    <Panel aria-labelledby="cashflow-title" className="gap-2.5 lg:min-h-[330px]">
       <PanelHeader
         titleId="cashflow-title"
         title="Arus kas bulanan"
@@ -39,7 +41,7 @@ export function CashflowChart({ data }: { data: MonthlyFlow[] }) {
             <button
               type="button"
               onClick={() => setView(view === "chart" ? "table" : "chart")}
-              className="shrink-0 rounded-md px-2 py-1 text-xs font-bold text-link outline-none hover:bg-action focus-visible:ring-2 focus-visible:ring-income/30"
+              className="shrink-0 rounded-md px-2 py-1 text-xs font-semibold text-link outline-none hover:bg-action focus-visible:ring-2 focus-visible:ring-primary-action/30"
             >
               {view === "chart" ? "Lihat tabel" : "Lihat grafik"}
             </button>
@@ -48,8 +50,11 @@ export function CashflowChart({ data }: { data: MonthlyFlow[] }) {
       />
 
       {!hasData ? (
-        <div className="flex flex-1 items-center justify-center rounded-lg bg-action px-6 py-12 text-center text-[13px] text-ink-muted">
-          Belum ada pemasukan atau pengeluaran dalam {data.length} bulan terakhir.
+        <div className="flex flex-1 flex-col items-center justify-center gap-4 rounded-lg bg-empty-surface p-5 lg:p-7">
+          <ChartNoAxesCombined className="size-8 text-ink-subtle" aria-hidden />
+          <p className="text-center text-xs leading-[22px] text-ink-muted lg:text-[13px] lg:leading-[23px]">
+            Belum ada pemasukan atau pengeluaran dalam {data.length} bulan terakhir.
+          </p>
         </div>
       ) : view === "table" ? (
         <CashflowTable data={data} />
@@ -90,7 +95,7 @@ function MonthColumn({ row, max }: { row: MonthlyFlow; max: number }) {
       <div
         tabIndex={0}
         aria-label={`${monthLabel(row.month)}: pemasukan ${formatRupiah(row.income)}, pengeluaran ${formatRupiah(row.expense)}`}
-        className="flex w-full flex-1 items-end justify-center gap-0.5 rounded-md border-b border-line outline-none hover:bg-action focus-visible:bg-action focus-visible:ring-2 focus-visible:ring-income/30"
+        className="flex w-full flex-1 items-end justify-center gap-0.5 rounded-md border-b border-line outline-none hover:bg-action focus-visible:bg-action focus-visible:ring-2 focus-visible:ring-primary-action/30"
       >
         <span
           className="w-5 rounded-t-[4px] bg-chart-income sm:w-6"
@@ -121,38 +126,26 @@ function MonthColumn({ row, max }: { row: MonthlyFlow; max: number }) {
 
 function CashflowTable({ data }: { data: MonthlyFlow[] }) {
   return (
-    <div className="overflow-x-auto">
-      <table className="w-full text-left text-[13px] text-ink-body">
-        <caption className="sr-only">Pemasukan dan pengeluaran per bulan</caption>
-        <thead className="text-[11px] font-bold tracking-wide text-ink-label uppercase">
-          <tr className="border-b border-line">
-            <th scope="col" className="py-2 font-bold">
-              Bulan
-            </th>
-            <th scope="col" className="py-2 text-right font-bold">
-              Pemasukan
-            </th>
-            <th scope="col" className="py-2 text-right font-bold">
-              Pengeluaran
-            </th>
-            <th scope="col" className="py-2 text-right font-bold">
-              Selisih
-            </th>
-          </tr>
-        </thead>
-        <tbody className="font-mono tabular-nums">
-          {data.map((row) => (
-            <tr key={row.month} className="border-b border-line last:border-0">
-              <th scope="row" className="py-2 font-sans font-normal">
-                {monthLabel(row.month)}
-              </th>
-              <td className="py-2 text-right">{formatRupiah(row.income)}</td>
-              <td className="py-2 text-right">{formatRupiah(row.expense)}</td>
-              <td className="py-2 text-right">{formatRupiah(row.income - row.expense)}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+    <DataTable className="min-w-0">
+      <caption className="sr-only">Pemasukan dan pengeluaran per bulan</caption>
+      <thead>
+        <tr>
+          <Th>Bulan</Th>
+          <Th className="text-right">Pemasukan</Th>
+          <Th className="text-right">Pengeluaran</Th>
+          <Th className="text-right">Selisih</Th>
+        </tr>
+      </thead>
+      <tbody className="font-mono tabular-nums">
+        {data.map((row) => (
+          <Tr key={row.month}>
+            <Td className="py-2.5 font-sans">{monthLabel(row.month)}</Td>
+            <Td className="py-2.5 text-right">{formatRupiah(row.income)}</Td>
+            <Td className="py-2.5 text-right">{formatRupiah(row.expense)}</Td>
+            <Td className="py-2.5 text-right">{formatRupiah(row.income - row.expense)}</Td>
+          </Tr>
+        ))}
+      </tbody>
+    </DataTable>
   );
 }

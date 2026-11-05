@@ -68,7 +68,7 @@ export function CategoryDialog({
             : `Perubahan nama berlaku di formulir dan riwayat transaksi ${config.noun}.`
           : `Tipe baru akan tersedia di formulir catat ${config.noun}.`
       }
-      className="sm:max-w-[480px]"
+      className="sm:max-w-[600px]"
     >
       <CategoryForm
         key={formKey}
@@ -180,12 +180,15 @@ function CategoryForm({
         event.stopPropagation();
         void form.handleSubmit();
       }}
-      className="flex flex-col gap-4"
+      className="flex flex-col gap-[22px]"
     >
       {category ? <UsageSummary category={category} /> : null}
 
       {formError ? (
-        <p role="alert" className="rounded-lg bg-expense-surface px-3.5 py-3 text-xs text-expense">
+        <p
+          role="alert"
+          className="rounded-lg bg-expense-surface px-3.5 py-3 text-xs leading-5 text-expense"
+        >
           {formError}
         </p>
       ) : null}
@@ -274,11 +277,12 @@ function CategoryForm({
 
       <form.Subscribe selector={(state) => state.isSubmitting}>
         {(isSubmitting) => (
-          <div className="flex flex-col-reverse gap-3 pt-1 sm:flex-row sm:items-center sm:justify-between">
-            <div className="flex gap-2">
+          <div className="flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex flex-col gap-3 sm:flex-row">
               {category && !category.archived ? (
                 <ActionButton
                   tone="outline"
+                  className="w-full sm:w-auto"
                   onClick={() => setConfirm("archive")}
                   disabled={isSubmitting || busy !== null}
                 >
@@ -289,6 +293,7 @@ function CategoryForm({
               {category?.archived ? (
                 <ActionButton
                   tone="outline"
+                  className="w-full sm:w-auto"
                   onClick={() => run("restore")}
                   pending={busy === "restore"}
                   disabled={isSubmitting || busy !== null}
@@ -302,15 +307,20 @@ function CategoryForm({
                   tone="outline"
                   onClick={() => setConfirm("delete")}
                   disabled={isSubmitting || busy !== null}
-                  className="text-expense"
+                  className="w-full text-expense sm:w-auto"
                 >
                   <Trash2 aria-hidden />
                   Hapus
                 </ActionButton>
               ) : null}
             </div>
-            <div className="flex flex-col-reverse gap-2 sm:flex-row sm:items-center">
-              <ActionButton tone="outline" onClick={onDone} disabled={isSubmitting}>
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+              <ActionButton
+                tone="outline"
+                onClick={onDone}
+                disabled={isSubmitting}
+                className="w-full sm:w-auto"
+              >
                 Batal
               </ActionButton>
               <ActionButton
@@ -318,6 +328,7 @@ function CategoryForm({
                 tone="brand"
                 pending={isSubmitting}
                 disabled={busy !== null}
+                className="w-full sm:w-auto"
               >
                 Simpan tipe
               </ActionButton>
@@ -363,7 +374,7 @@ function CategoryForm({
 
 function UsageSummary({ category }: { category: CategoryListItem }) {
   return (
-    <dl className="grid grid-cols-2 gap-x-4 gap-y-3 rounded-lg bg-canvas px-3.5 py-3 text-xs sm:grid-cols-3">
+    <dl className="grid grid-cols-2 gap-x-4 gap-y-3 rounded-lg border border-line bg-empty-surface px-3.5 py-3 text-xs sm:grid-cols-3">
       <div className="flex flex-col gap-1">
         <dt className="text-ink-muted">Status</dt>
         <dd>

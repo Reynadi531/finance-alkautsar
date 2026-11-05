@@ -33,16 +33,16 @@ export function ConfirmDialog({
 }) {
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
-      <AlertDialogContent className="flex w-full flex-col gap-5 rounded-2xl bg-white p-6 text-ink ring-0 sm:max-w-[440px]">
-        <div className="flex flex-col gap-2">
-          <AlertDialogTitle className="font-display text-xl font-bold text-ink">
+      <AlertDialogContent className="flex w-full flex-col gap-[22px] rounded-[14px] bg-white p-6 text-ink ring-0 sm:max-w-[460px] sm:p-[30px]">
+        <div className="flex flex-col gap-2.5">
+          <AlertDialogTitle className="font-display text-[22px] leading-tight font-semibold text-ink">
             {title}
           </AlertDialogTitle>
-          <AlertDialogDescription className="text-[13px] text-ink-muted">
+          <AlertDialogDescription className="text-xs/5 text-ink-muted">
             {description}
           </AlertDialogDescription>
         </div>
-        <div className="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
+        <div className="flex flex-col gap-3 sm:flex-row sm:justify-end [&>*]:w-full sm:[&>*]:w-auto">
           <ActionButton tone="outline" onClick={() => onOpenChange(false)} disabled={pending}>
             Batal
           </ActionButton>

@@ -15,11 +15,14 @@ export function NoAccessPanel({
 }) {
   return (
     <PageContainer>
-      <div role="alert" className="flex flex-col items-start gap-3 rounded-xl bg-white p-6">
+      <div
+        role="alert"
+        className="flex flex-col items-start gap-3 rounded-[10px] border border-line bg-white p-6 shadow-card"
+      >
         <span className="flex size-10 items-center justify-center rounded-full bg-info-surface text-brand">
           <ShieldAlert className="size-5" aria-hidden />
         </span>
-        <h1 className="font-display text-xl font-bold text-ink">{title}</h1>
+        <h1 className="font-display text-xl font-semibold text-ink">{title}</h1>
         <p className="text-sm text-ink-muted">{message}</p>
       </div>
     </PageContainer>

@@ -35,15 +35,15 @@ export function PublicReportPanel({ enabled }: { enabled: boolean }) {
   }
 
   return (
-    <Panel aria-labelledby="public-report-title" className="gap-[9px] p-5">
+    <Panel aria-labelledby="public-report-title" className="gap-5 p-6">
       <PanelHeader title="Transparansi publik" titleId="public-report-title" />
-      <p className="text-[13px] text-ink-muted">
+      <p className="text-[13px] leading-[23px] text-ink-lead">
         Publikasikan ringkasan laporan kas agar dapat diakses warga. Data sensitif dan lampiran
         tidak akan ditampilkan.
       </p>
-      <div className="mt-1.5 flex items-center justify-between gap-4 rounded-lg border border-line px-4 py-3.5">
+      <div className="flex items-center justify-between gap-4 rounded-lg border border-field p-4">
         <div className="flex min-w-0 flex-col gap-0.5">
-          <span id={labelId} className="text-[13px] font-bold text-ink-strong">
+          <span id={labelId} className="text-[13px] font-semibold text-ink">
             Publikasi laporan
           </span>
           <span id={statusId} className="text-xs text-ink-muted" aria-live="polite">
@@ -56,7 +56,7 @@ export function PublicReportPanel({ enabled }: { enabled: boolean }) {
           aria-labelledby={labelId}
           aria-describedby={statusId}
           onCheckedChange={(next) => (next ? setConfirming(true) : apply(false))}
-          className="data-[size=default]:h-6 data-[size=default]:w-11 data-checked:bg-income data-unchecked:bg-[#DDE4E0] focus-visible:ring-2 focus-visible:ring-income/40 px-0.5 [&>span]:size-5!"
+          className="data-[size=default]:h-6 data-[size=default]:w-11 data-checked:bg-primary-action data-unchecked:bg-control focus-visible:ring-2 focus-visible:ring-primary-action/40 px-0.5 [&>span]:size-5!"
         />
       </div>
 

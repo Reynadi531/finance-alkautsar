@@ -57,7 +57,10 @@ function focusFirstInvalid(form: HTMLFormElement | null) {
 function FormAlert({ message }: { message: string | null }) {
   if (!message) return null;
   return (
-    <p role="alert" className="rounded-lg bg-expense-surface px-3.5 py-3 text-xs text-expense">
+    <p
+      role="alert"
+      className="rounded-lg bg-expense-surface px-3.5 py-3 text-xs leading-5 text-expense"
+    >
       {message}
     </p>
   );
@@ -142,7 +145,7 @@ export function CreateUserDialog({
         id="create-user-form"
         ref={formRef}
         noValidate
-        className="flex flex-col gap-4"
+        className="flex flex-col gap-[22px]"
         onSubmit={(event) => {
           event.preventDefault();
           event.stopPropagation();
@@ -301,7 +304,7 @@ function EditUserForm({
     <form
       ref={formRef}
       noValidate
-      className="flex flex-col gap-4"
+      className="flex flex-col gap-[22px]"
       onSubmit={(event) => {
         event.preventDefault();
         event.stopPropagation();
@@ -431,7 +434,7 @@ function ResetPasswordForm({
     <form
       ref={formRef}
       noValidate
-      className="flex flex-col gap-4"
+      className="flex flex-col gap-[22px]"
       onSubmit={(event) => {
         event.preventDefault();
         event.stopPropagation();

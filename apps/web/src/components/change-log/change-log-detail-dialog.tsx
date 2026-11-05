@@ -98,7 +98,7 @@ function DetailBody({ entry }: { entry: ChangeLogEntry }) {
       </dl>
 
       <section aria-labelledby="change-values-title" className="flex flex-col gap-3">
-        <h3 id="change-values-title" className="text-xs font-bold text-ink">
+        <h3 id="change-values-title" className="text-xs font-semibold text-ink">
           Perubahan nilai
         </h3>
         <ValueChanges entry={entry} changes={changes} />
@@ -119,7 +119,7 @@ function DetailBody({ entry }: { entry: ChangeLogEntry }) {
           <Link
             to={transactionLink.to}
             search={{ q: transactionLink.q } as never}
-            className="inline-flex items-center gap-1.5 self-start rounded text-xs font-bold text-brand outline-none hover:underline focus-visible:ring-2 focus-visible:ring-brand/30"
+            className="inline-flex items-center gap-1.5 self-start rounded text-xs font-semibold text-link outline-none hover:underline focus-visible:ring-2 focus-visible:ring-primary-action/30"
           >
             Lihat transaksi terkait
             <ArrowUpRight className="size-3.5" aria-hidden />
@@ -222,8 +222,8 @@ function ValueBox({ side, children }: { side: "before" | "after"; children: Reac
   return (
     <div
       className={cn(
-        "flex min-w-0 flex-col gap-[7px] rounded-[7px] p-3.5",
-        side === "before" ? "bg-canvas text-ink-muted" : "bg-income-surface text-income",
+        "flex min-w-0 flex-col gap-[7px] rounded-lg p-3.5",
+        side === "before" ? "bg-muted-surface text-ink-muted" : "bg-income-surface text-income",
       )}
     >
       <p className="text-[10px] font-bold tracking-[0.06em] uppercase">

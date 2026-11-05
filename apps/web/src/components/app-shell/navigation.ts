@@ -2,12 +2,12 @@ import type { LinkProps } from "@tanstack/react-router";
 import {
   ArrowDownLeft,
   ArrowUpRight,
-  Clock3,
-  Columns3,
-  LayoutGrid,
+  BookOpen,
+  History,
+  LayoutDashboard,
   Rows3,
   Settings,
-  User,
+  Users,
   type LucideIcon,
 } from "lucide-react";
 
@@ -25,7 +25,6 @@ export type NavItem = {
 
 export type NavSection = {
   label: string;
-  size: "default" | "compact";
   items: readonly NavItem[];
 };
 
@@ -36,9 +35,8 @@ const adminOnly = ["admin"] as const;
 export const navSections: readonly NavSection[] = [
   {
     label: "Menu utama",
-    size: "default",
     items: [
-      { label: "Dashboard", icon: LayoutGrid, to: "/dashboard", roles: allMembers },
+      { label: "Dashboard", icon: LayoutDashboard, to: "/dashboard", roles: allMembers },
       {
         label: "Uang Masuk",
         icon: ArrowUpRight,
@@ -58,17 +56,16 @@ export const navSections: readonly NavSection[] = [
         activePaths: ["/dashboard/tipe-pengeluaran"],
         roles: adminOnly,
       },
-      { label: "Laporan Kas", icon: Columns3, to: "/dashboard/laporan", roles: financeStaff },
+      { label: "Laporan Kas", icon: BookOpen, to: "/dashboard/laporan", roles: financeStaff },
     ],
   },
   {
     label: "Administrasi",
-    size: "compact",
     items: [
-      { label: "Pengguna", icon: User, to: "/dashboard/pengguna", roles: adminOnly },
+      { label: "Pengguna", icon: Users, to: "/dashboard/pengguna", roles: adminOnly },
       {
         label: "Riwayat Perubahan",
-        icon: Clock3,
+        icon: History,
         to: "/dashboard/change-log",
         roles: financeStaff,
       },

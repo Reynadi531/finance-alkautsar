@@ -1,5 +1,6 @@
 import { Outlet, createFileRoute, useNavigate } from "@tanstack/react-router";
 
+import { ActionButton } from "@/components/action-button";
 import { AppShell } from "@/components/app-shell/app-shell";
 import { getAppShell } from "@/functions/mosque";
 import { authClient } from "@/lib/auth-client";
@@ -31,24 +32,28 @@ function NoAccess({ email, mosqueName }: { email: string; mosqueName: string }) 
 
   return (
     <main className="flex min-h-svh items-center justify-center bg-canvas px-4">
-      <div className="flex w-full max-w-md flex-col gap-5 rounded-xl bg-white p-8">
-        <p className="font-display text-xl font-bold text-brand">ruangmasjid</p>
+      <div className="flex w-full max-w-md flex-col gap-5 rounded-[10px] border border-line bg-white p-8 shadow-card">
+        <p className="font-display text-xl font-bold tracking-[-0.7px] text-brand">ruangmasjid</p>
         <div className="flex flex-col gap-2">
-          <h1 className="font-display text-2xl font-bold text-ink">Belum ada akses</h1>
+          <h1 className="font-display text-2xl font-semibold tracking-[-0.8px] text-ink">
+            Belum ada akses
+          </h1>
           <p className="text-sm text-ink-muted">
             Akun {email} belum memiliki peran di {mosqueName}. Minta administrator menambahkan akun
             ini sebagai pengurus.
           </p>
         </div>
-        <button
-          type="button"
+        <ActionButton
+          tone="outline"
+          className="self-start"
           onClick={() =>
-            authClient.signOut({ fetchOptions: { onSuccess: () => navigate({ to: "/login" }) } })
+            authClient.signOut({
+              fetchOptions: { onSuccess: () => navigate({ to: "/login" }) },
+            })
           }
-          className="self-start rounded-lg bg-action px-4 py-2 text-[13px] font-bold text-action-foreground hover:bg-action-hover"
         >
           Keluar
-        </button>
+        </ActionButton>
       </div>
     </main>
   );

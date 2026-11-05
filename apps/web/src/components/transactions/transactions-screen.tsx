@@ -1,6 +1,6 @@
 import { Skeleton } from "@keuangan-alkautsar/ui/components/skeleton";
 import { useRouter } from "@tanstack/react-router";
-import { CalendarDays, Download } from "lucide-react";
+import { CalendarDays, Download, Plus, ReceiptText, SearchX, Upload } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 
@@ -142,7 +142,8 @@ export function TransactionsScreen({
   }
 
   const emptyMessage = data.q ? (
-    <div className="flex flex-col items-center gap-3">
+    <div className="flex flex-col items-center gap-4">
+      <SearchX className="size-8 text-ink-subtle" aria-hidden />
       <p>
         Tidak ada {copy.noun} yang cocok dengan “{data.q}” pada {periodText}.
       </p>
@@ -155,18 +156,21 @@ export function TransactionsScreen({
       </ActionButton>
     </div>
   ) : data.total > 0 ? (
-    <div className="flex flex-col items-center gap-3">
+    <div className="flex flex-col items-center gap-4">
+      <ReceiptText className="size-8 text-ink-subtle" aria-hidden />
       <p>Halaman ini kosong.</p>
       <ActionButton tone="outline" size="sm" onClick={() => onSearchChange({ page: undefined })}>
         Ke halaman pertama
       </ActionButton>
     </div>
   ) : (
-    <div className="flex flex-col items-center gap-3">
+    <div className="flex flex-col items-center gap-4">
+      <ReceiptText className="size-8 text-ink-subtle" aria-hidden />
       <p>
         Belum ada {copy.noun} tercatat pada {periodText}.
       </p>
-      <ActionButton tone={kind} size="sm" onClick={() => openEditor(null)}>
+      <ActionButton tone="brand" onClick={() => openEditor(null)}>
+        <Plus aria-hidden />
         {copy.addLabel}
       </ActionButton>
     </div>
@@ -179,10 +183,20 @@ export function TransactionsScreen({
         description={copy.description}
         action={
           <>
-            <ActionButton tone="outline" onClick={() => setImportOpen(true)}>
+            <ActionButton
+              tone="outline"
+              className="flex-1 sm:flex-none"
+              onClick={() => setImportOpen(true)}
+            >
+              <Upload aria-hidden />
               Impor CSV
             </ActionButton>
-            <ActionButton tone={kind} onClick={() => openEditor(null)}>
+            <ActionButton
+              tone="brand"
+              className="flex-1 sm:flex-none"
+              onClick={() => openEditor(null)}
+            >
+              <Plus aria-hidden />
               {copy.addLabel}
             </ActionButton>
           </>
@@ -205,52 +219,51 @@ export function TransactionsScreen({
         showCategoryLink={data.role === "admin"}
       />
 
-      <Panel aria-labelledby="transaction-list-title" className="border border-line p-5 sm:p-5">
-        <div className="flex flex-col gap-4 pb-4 lg:flex-row lg:items-start lg:justify-between">
-          <div className="flex flex-col gap-1.5">
-            <h2 id="transaction-list-title" className="font-display text-[17px] font-bold text-ink">
-              {copy.listTitle}
-            </h2>
-            <p className="text-[11px] text-ink-subtle">
-              {data.q ? `Hasil pencarian “${data.q}”` : "Menampilkan transaksi terbaru"} ·{" "}
-              {periodText}
-            </p>
-          </div>
-          <div className="flex flex-wrap items-center gap-2">
-            <SearchInput
-              value={data.q}
-              onSearch={(value) =>
-                onSearchChange({ q: value.trim() || undefined, page: undefined, month: data.month })
-              }
-              placeholder="Cari transaksi..."
-              aria-label={`Cari ${copy.noun}`}
-              className="w-full sm:w-[245px]"
+      <Panel aria-labelledby="transaction-list-title" className="gap-5">
+        <div className="flex flex-col gap-2.5">
+          <h2 id="transaction-list-title" className="font-display text-lg font-semibold text-ink">
+            {copy.listTitle}
+          </h2>
+          <p className="text-xs text-ink-muted">
+            {data.q ? `Hasil pencarian “${data.q}”` : "Menampilkan transaksi terbaru"} ·{" "}
+            {periodText}
+          </p>
+        </div>
+
+        <div className="flex flex-col gap-3 sm:flex-row">
+          <SearchInput
+            value={data.q}
+            onSearch={(value) =>
+              onSearchChange({ q: value.trim() || undefined, page: undefined, month: data.month })
+            }
+            placeholder="Cari transaksi…"
+            aria-label={`Cari ${copy.noun}`}
+            className="w-full sm:flex-1"
+          />
+          <div className="relative w-full sm:w-auto">
+            <CalendarDays
+              className="pointer-events-none absolute top-1/2 left-4 z-10 size-4 -translate-y-1/2 text-ink-strong"
+              aria-hidden
             />
-            <div className="relative">
-              <CalendarDays
-                className="pointer-events-none absolute top-1/2 left-3 z-10 size-3.5 -translate-y-1/2 text-ink-muted"
-                aria-hidden
-              />
-              <AppSelect
-                variant="filter"
-                aria-label="Bulan"
-                value={data.month}
-                onValueChange={(month) =>
-                  onSearchChange({ month: month as TransactionSearch["month"], page: undefined })
-                }
-                options={monthOptions}
-                className="pl-8"
-              />
-            </div>
-            <a
-              href={`/api/transaksi/ekspor?${exportParams}`}
-              download
-              className={actionButtonVariants({ tone: "outline" })}
-            >
-              <Download aria-hidden />
-              Ekspor
-            </a>
+            <AppSelect
+              variant="filter"
+              aria-label="Bulan"
+              value={data.month}
+              onValueChange={(month) =>
+                onSearchChange({ month: month as TransactionSearch["month"], page: undefined })
+              }
+              options={monthOptions}
+              className="w-full pl-11 sm:w-auto sm:min-w-[160px]"
+            />
           </div>
+          <a
+            href={`/api/transaksi/ekspor?${exportParams}`}
+            download
+            className={actionButtonVariants({ tone: "outline", className: "w-full sm:w-auto" })}
+          >
+            <Download aria-hidden />
+            Ekspor
+          </a>
         </div>
 
         <TransactionTable
@@ -267,7 +280,7 @@ export function TransactionsScreen({
           total={data.total}
           noun="transaksi"
           onPageChange={(page) => onSearchChange({ page: page > 1 ? page : undefined })}
-          className="border-t border-line"
+          className="pt-0"
         />
       </Panel>
 
@@ -341,16 +354,16 @@ export function TransactionsSkeleton() {
     <PageContainer aria-busy="true" aria-label="Memuat transaksi">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <Skeleton className="h-9 w-56 rounded-lg bg-white" />
-        <Skeleton className="h-[38px] w-64 rounded-lg bg-white" />
+        <Skeleton className="h-12 w-64 rounded-lg bg-white" />
       </div>
       <Skeleton className="h-5 w-80 max-w-full rounded-lg bg-white" />
       <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
         {Array.from({ length: 3 }, (_, index) => (
-          <Skeleton key={index} className="h-[153px] rounded-xl bg-white" />
+          <Skeleton key={index} className="h-[134px] rounded-[10px] bg-white" />
         ))}
       </div>
       <Skeleton className="h-[88px] rounded-[10px] bg-white" />
-      <Skeleton className="h-[480px] rounded-xl bg-white" />
+      <Skeleton className="h-[480px] rounded-[10px] bg-white" />
     </PageContainer>
   );
 }

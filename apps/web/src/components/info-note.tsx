@@ -15,11 +15,11 @@ export function InfoNote({
   return (
     <div
       className={cn(
-        "flex items-start gap-2.5 rounded-lg bg-info-surface px-3.5 py-3 text-xs text-info-foreground",
+        "flex items-start gap-2.5 rounded-lg bg-info-surface px-4 py-3 text-xs leading-5 text-info-foreground",
         className,
       )}
     >
-      {icon ? <Info className="mt-px size-3.5 shrink-0" aria-hidden /> : null}
+      {icon ? <Info className="mt-px size-[18px] shrink-0 text-info-icon" aria-hidden /> : null}
       <div className="min-w-0">{children}</div>
     </div>
   );

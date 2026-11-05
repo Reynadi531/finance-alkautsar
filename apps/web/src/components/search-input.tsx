@@ -30,14 +30,14 @@ export function SearchInput({
   return (
     <div className={cn("relative min-w-0", className)}>
       <Search
-        className="pointer-events-none absolute top-1/2 left-3.5 size-3.5 -translate-y-1/2 text-ink-subtle"
+        className="pointer-events-none absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-ink-muted"
         aria-hidden
       />
       <input
         type="search"
         value={draft}
         onChange={(event) => setDraft(event.target.value)}
-        className="h-[38px] w-full rounded-lg border border-line bg-white pr-3 pl-9 text-[13px] text-ink outline-none placeholder:text-ink-subtle focus-visible:border-brand focus-visible:ring-2 focus-visible:ring-brand/20"
+        className="h-12 w-full rounded-lg border border-control bg-white pr-3.5 pl-10 text-[13px] text-ink outline-none placeholder:text-ink-subtle focus-visible:border-primary-action focus-visible:ring-2 focus-visible:ring-primary-action/20"
         {...props}
       />
     </div>

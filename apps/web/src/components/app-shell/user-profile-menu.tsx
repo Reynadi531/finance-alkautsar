@@ -34,15 +34,15 @@ export function UserProfileMenu({
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className="flex w-full items-center gap-2.5 rounded-[10px] bg-brand-raised p-3 text-left outline-none hover:brightness-110 focus-visible:ring-2 focus-visible:ring-white/70">
+      <DropdownMenuTrigger className="flex w-full items-center gap-3 rounded-lg bg-brand-raised p-3 text-left outline-none hover:bg-white/[0.09] focus-visible:ring-2 focus-visible:ring-white/70">
         <span
           aria-hidden
-          className="flex size-8 shrink-0 items-center justify-center rounded-full bg-brand-tint text-[11px] font-bold text-brand"
+          className="flex size-9 shrink-0 items-center justify-center rounded-full bg-brand-tint text-sm font-bold text-ink-strong"
         >
           {initials(name)}
         </span>
-        <span className="flex min-w-0 flex-1 flex-col gap-[3px]">
-          <span className="truncate text-xs font-bold text-white">{name}</span>
+        <span className="flex min-w-0 flex-1 flex-col gap-1">
+          <span className="truncate text-[13px] font-semibold text-white">{name}</span>
           <span className="truncate text-[10px] text-brand-muted">{roleLabel}</span>
         </span>
         <ChevronsUpDown className="size-4 shrink-0 text-brand-muted" aria-hidden />

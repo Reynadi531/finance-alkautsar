@@ -20,7 +20,7 @@ export function Th({ className, ...props }: ComponentProps<"th">) {
     <th
       scope="col"
       className={cn(
-        "bg-canvas px-2.5 py-3 text-[10px] font-bold tracking-[0.08em] whitespace-nowrap text-ink-label uppercase first:rounded-l-lg last:rounded-r-lg",
+        "bg-muted-surface px-3 py-3.5 text-[10px] font-bold whitespace-nowrap text-ink-label first:rounded-l-md last:rounded-r-md",
         className,
       )}
       {...props}
@@ -34,10 +34,7 @@ export function Tr({ className, ...props }: ComponentProps<"tr">) {
 
 export function Td({ className, ...props }: ComponentProps<"td">) {
   return (
-    <td
-      className={cn("px-2.5 py-4 align-middle text-[13px] text-ink-body", className)}
-      {...props}
-    />
+    <td className={cn("px-3 py-4 align-middle text-[13px] text-ink-body", className)} {...props} />
   );
 }
 
@@ -45,7 +42,10 @@ export function Td({ className, ...props }: ComponentProps<"td">) {
 export function TableMessage({ colSpan, children }: { colSpan: number; children: ReactNode }) {
   return (
     <tr>
-      <td colSpan={colSpan} className="px-2.5 py-10 text-center text-[13px] text-ink-muted">
+      <td
+        colSpan={colSpan}
+        className="px-3 py-16 text-center text-[13px] leading-[23px] text-ink-muted"
+      >
         {children}
       </td>
     </tr>
